@@ -42,8 +42,18 @@ inputs it must refuse and a clean input it must pass, and a gate that fails its
 own test refuses the build. The fake credentials in those fixtures are joined
 together at run time, so none appears whole in `render.py`.
 
-- **A missing or wrong-typed field in `content/site.toml`.** Every field the
-  page uses is checked for presence and type (text, list, table, number,
+What a fire test proves is the gate's *matching*: that it recognises each form
+listed below in a sample. The missing-file gate's test also covers every place
+it reads (both quote styles, `srcset`, `style.css`, `photo.css`, `minimap.css`,
+`fonts.css`). For the other gates, the lists of *which files* are read describe
+the code, and are not fire-tested, with one exception: the credential scan
+refuses the build unless `index.html`, `app.js`, `style.css` and
+`assets/favicon.svg` are among the files it read. Whether the content check
+covers every field the page uses is likewise not tested.
+
+- **A missing or wrong-typed field in `content/site.toml`.** Every field in
+  `render.py`'s `SCHEMA` (written to list every field the page uses) is checked
+  for presence and type (text, list, table, number,
   true/false), and the refusal names the field, such as
   `identity.location: must be non-empty text, got 5`. A `KeyError`,
   `TypeError`, `AttributeError`, `ValueError` or `IndexError` raised while
@@ -51,14 +61,19 @@ together at run time, so none appears whole in `render.py`.
   traceback; that fallback is not fire-tested.
 - **A link in `content/site.toml` that is not `https://`** (the page URL,
   project, certification and contact links). A link may be `""`, which hides it.
-- **A credential-shaped string:** a private-key block, an AWS access key, an
-  `sk-`/`sk-ant-` key, a `gh[pousr]_` or `github_pat_` GitHub token, a Slack
-  `xox[abprs]-` token, a Google `AIza…` key, a JWT, a password/secret/token/API
-  key assignment, or a run of 40 or more lower-case or upper-case hex digits.
+- **A credential-shaped string:** a private-key block, an AWS access key
+  (`AKIA…` or temporary `ASIA…`), an `sk-`/`sk-ant-` key, a `gh[pousr]_` or
+  `github_pat_` GitHub token, a Slack `xox[abprs]-` token, a Google `AIza…` key,
+  a JWT, an assignment of 8 or more characters to a name ending in `password`,
+  `passwd`, `secret`, `token` or `api_key`/`api-key`/`apikey` (so `access_token`
+  and `db_password` too, but not `mytoken`), or a run of 40 or more hex digits in
+  any case, even inside a longer word.
   Scanned: every `.html .css .js .json .svg .txt .toml .md` file in the output,
   plus `content/site.toml`, `src/index.html`, `src/style.css` and `src/app.js`.
-  Binary files, such as the résumé PDF and images, are not scanned (the résumé
-  has its own check, below).
+  Binary files, such as the résumé PDF and images, are not scanned. The
+  résumé has a separate check for phone numbers only, run by
+  `scripts/build-resume.sh` when the PDF is regenerated, not by this build (see
+  below).
 - **Anything that would make the browser contact another site**, in the
   output's `.html`, `.css`, `.js` and `.svg` files: a `src`/`href` (including
   `xlink:href`) on `script`, `link`, `img`, `image`, `source`, `iframe`,
@@ -74,21 +89,25 @@ together at run time, so none appears whole in `render.py`.
   space-separated), and `hsl()`/`hsla()`. Allowed: `#000`, `#fff`, `#000000`,
   `#ffffff`, the print stylesheet's greys `#ccc` and `#222`, and black or white
   `rgb()`/`rgba()` at any opacity. Selectors (an id such as `#fab`), comments
-  and `url()` are not read as colours.
+  and `url()` are not read as colours. Not caught: named colours (`red`), newer
+  colour functions (`oklch()`, `lab()`), and declarations in a rule that also
+  contains a nested rule (CSS nesting, which neither stylesheet uses).
 - **A skill with no explainer.** Every item of a skills group, every project
   stack item and every project domain badge needs a file in `content/topics/`
   whose name or alias matches it (ignoring case); a skills group with
   `linked = false` is exempt.
 - **Two explainers claiming the same skill:** a name or alias, ignoring case,
   claimed by two files in `content/topics/`.
-- **A missing local file:** every `src`/`href` (double- or single-quoted) and
+- **A missing local file:** every `src`/`href` (double- or single-quoted, with
+  or without spaces around `=`) and
   every `srcset` entry on every output page, every `url()` in `style.css`,
   `photo.css` and `minimap.css`, and every `.woff2` font in `fonts.css` must
   name a file that exists in the output.
 - **The owner's first name shortened on its own**, anywhere the credential scan
   looks.
 
-These also refuse the build, but are not fire-tested: Python older than 3.11;
+These also refuse the build, but are not fire-tested: Python older than 3.11
+(checked before anything that needs 3.11 is imported);
 `content/site.toml`, a palette or a topic file that does not parse; a palette
 colour that is not `#rrggbb`; a topic file with a missing field or a name that
 is not lowercase letters, digits and hyphens; a minimap folder missing a file,

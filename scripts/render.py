@@ -32,7 +32,11 @@ import shutil
 import subprocess
 import sys
 import tempfile
-import tomllib
+
+if sys.version_info < (3, 11):
+    # before `import tomllib`, which would otherwise fail first with a traceback
+    sys.exit("render: REFUSED — Python 3.11 or newer is required (tomllib)")
+import tomllib  # noqa: E402
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -79,15 +83,15 @@ HEADERS = [
 # ── gates ───────────────────────────────────────────────────────────────────
 SECRET_PATTERNS = {
     "private key block": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
-    "AWS access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    "AWS access key": re.compile(r"\bA(?:KIA|SIA)[0-9A-Z]{16}\b"),   # long-term and temporary
     "OpenAI/Anthropic-style key": re.compile(r"\bsk-(?:ant-)?[A-Za-z0-9_-]{20,}\b"),
     "GitHub token": re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b"),
     "GitHub fine-grained token": re.compile(r"\bgithub_pat_[A-Za-z0-9_]{22,}"),
     "Slack token": re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}"),
     "Google API key": re.compile(r"\bAIza[0-9A-Za-z_-]{35}(?![0-9A-Za-z_-])"),
     "JWT": re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b"),
-    "password/token assignment": re.compile(r"(?i)\b(password|passwd|secret|api[_-]?key|token)\s*[:=]\s*['\"]?[^\s'\"<]{8,}"),
-    "long hex string": re.compile(r"(?<![A-Za-z0-9])(?:[0-9a-f]{40,}|[0-9A-F]{40,})(?![A-Za-z0-9])"),
+    "password/token assignment": re.compile(r"(?i)(?<![a-z0-9])(password|passwd|secret|api[_-]?key|token)\s*[:=]\s*['\"]?[^\s'\"<]{8,}"),
+    "long hex string": re.compile(r"[0-9a-fA-F]{40,}"),   # any case, even inside a longer word
 }
 # The owner's first name is Sreenandan. The shortened form must never appear
 # on its own — "Sreenandan" contains it, so a lookbehind excludes that.
@@ -167,8 +171,8 @@ def refuse_colour_literals(css: str) -> None:
 
 # Local files a page refers to: src/href in double or single quotes, and every
 # srcset entry. In-page anchors, mail, data: and other origins are not files.
-ASSET_ATTR = re.compile(r"""(?:src|href)=(?:"([^"#]+)|'([^'#]+))""")
-SRCSET_ATTR = re.compile(r"""srcset=(?:"([^"]*)"|'([^']*)')""")
+ASSET_ATTR = re.compile(r"""(?:src|href)\s*=\s*(?:"([^"#]+)|'([^'#]+))""")
+SRCSET_ATTR = re.compile(r"""srcset\s*=\s*(?:"([^"]*)"|'([^']*)')""")
 NOT_A_FILE = re.compile(r"(?i)^(?:mailto:|https?:|data:|//)")
 
 
@@ -315,6 +319,7 @@ def fire_test_gates() -> None:
         # the gate works (27 Sep 2026).
         ("private key block", "-----BEGIN RSA " + "PRIVATE KEY-----"),
         ("AWS access key", "AKIA" + "IOSFODNN7EXAMPLE"),
+        ("AWS access key", "ASIA" + "IOSFODNN7EXAMPLE"),
         ("OpenAI/Anthropic-style key", "sk-" + "ant-" + "abcdefghijklmnopqrstuvwxyz0123"),
         ("GitHub token", "ghp_" + "a" * 36),
         ("GitHub fine-grained token", "github_" + "pat_" + "A1b2C3d4" * 3 + "_" + "e5F6" * 14),
@@ -322,8 +327,13 @@ def fire_test_gates() -> None:
         ("Google API key", "AI" + "za" + "Sy" + "B" * 33),
         ("JWT", "eyJ" + "hbGciOiJIUzI1NiJ9" + "." + "eyJ" + "zdWIiOiIxMjM0In0" + "." + "abcdefghijklmnop"),
         ("password/token assignment", "pass" + "word = " + "hunter" + "22222"),
+        ("password/token assignment", "access_" + "token = " + "hunter" + "22222"),
+        ("password/token assignment", "client_" + "secret: " + "hunter" + "22222"),
+        ("password/token assignment", "db_" + "password=" + "hunter" + "22222"),
         ("long hex string", "d" * 40),
         ("long hex string", "D" * 40),
+        ("long hex string", "dE" * 20),
+        ("long hex string", "key" + "3f" * 20),
     ]
     for name, fixture in bad_secrets:
         if scan_secrets(fixture) != name:
@@ -383,12 +393,17 @@ def fire_test_gates() -> None:
         root = Path(tmp)
         (root / "index.html").write_text(
             '<link href="style.css"><img src=\'a.png\'><img srcset="b.png 1x, c.png 2x">'
-            '<a href="#top"></a><a href="https://x.test/">x</a><a href="mailto:a@b.test">m</a>')
+            '<img src = "e.png"><a href="#top"></a><a href="https://x.test/">x</a><a href="mailto:a@b.test">m</a>')
         (root / "style.css").write_text(".x{background:url(d.png)}")
+        (root / "photo.css").write_text(".p{mask-image:url('f.png')}")
+        (root / "minimap.css").write_text(".m{background:url(\"h.png\")}")
+        (root / "assets" / "fonts").mkdir(parents=True)
+        (root / "assets" / "fonts" / "fonts.css").write_text("@font-face{src:url(g.woff2)}")
+        want = ["a.png", "assets/fonts/g.woff2", "b.png", "c.png", "d.png", "e.png", "f.png", "h.png"]
         missing, _, _ = missing_assets(root)
-        if missing != ["a.png", "b.png", "c.png", "d.png"]:
-            raise Refuse(f"asset gate broken: expected a.png, b.png, c.png and d.png missing, got {missing}")
-        for name in ("a.png", "b.png", "c.png", "d.png"):
+        if missing != want:
+            raise Refuse(f"asset gate broken: expected {want} missing, got {missing}")
+        for name in want:
             (root / name).write_bytes(b"")
         if missing_assets(root)[0]:
             raise Refuse(f"asset gate broken: false positive when every file exists ({missing_assets(root)[0]})")
@@ -1083,6 +1098,11 @@ def gate_dist(out: Path | None = None) -> None:
     """Every gate over the written site in `out` (default DIST)."""
     DIST = out or globals()["DIST"]
     text_files = [p for p in DIST.rglob("*") if p.is_file() and p.suffix in TEXT_SUFFIXES]
+    # the file walk itself: these must be among the scanned files, or the scan
+    # is reading less than it claims (RULES 2.2)
+    scanned = {p.relative_to(DIST).as_posix() for p in text_files}
+    if (gap := {"index.html", "app.js", "style.css", "assets/favicon.svg"} - scanned):
+        raise Refuse(f"scan coverage broken: {sorted(gap)} were not scanned")
     for p in text_files + [CONTENT, SRC / "index.html", SRC / "style.css", SRC / "app.js"]:
         t = p.read_text(encoding="utf-8")
         rel = p.relative_to(ROOT)
@@ -1171,8 +1191,6 @@ def swap_into_place(candidate: Path) -> None:
 
 
 def main() -> None:
-    if sys.version_info < (3, 11):
-        raise Refuse("Python 3.11 or newer is required (tomllib)")
     # an interrupted swap: dist/ was moved aside and never replaced
     if OLD.exists() and not DIST.exists():
         OLD.rename(DIST)
