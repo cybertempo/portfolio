@@ -31,16 +31,76 @@ bash scripts/build.sh --serve   # the same, then a local preview
 
 ## What the build refuses
 
-The build produces nothing at all if any of these is true, and every check is
-tested against a deliberately bad input on each run before it is trusted:
+A refused build prints `render: REFUSED — <reason>`, exits non-zero, and leaves
+the previous `dist/` exactly as it was. The site is rendered into
+`dist.candidate/`, every gate runs there, and only a candidate that passed them
+all replaces `dist/`; the old `dist/` is kept as `dist.old/` until that swap
+succeeds. A refused or failed candidate is deleted.
 
-- a field is missing or malformed, or a link uses `http://`
-- the output contains anything shaped like a credential (key blocks, API keys,
-  tokens, long hex strings)
-- the page would load a script, style, font or image from another site
-- the stylesheet contains a colour written directly, instead of one from the palette
-- a skill on the page has no explainer, or two explainers claim the same skill
-- an asset the page refers to does not exist
+Every run starts by fire-testing the gates below: each one is fed synthetic bad
+inputs it must refuse and a clean input it must pass, and a gate that fails its
+own test refuses the build. The fake credentials in those fixtures are joined
+together at run time, so none appears whole in `render.py`.
+
+- **A missing or wrong-typed field in `content/site.toml`.** Every field the
+  page uses is checked for presence and type (text, list, table, number,
+  true/false), and the refusal names the field, such as
+  `identity.location: must be non-empty text, got 5`. A `KeyError`,
+  `TypeError`, `AttributeError`, `ValueError` or `IndexError` raised while
+  rendering the content is also turned into a `REFUSED` message instead of a
+  traceback; that fallback is not fire-tested.
+- **A link in `content/site.toml` that is not `https://`** (the page URL,
+  project, certification and contact links). A link may be `""`, which hides it.
+- **A credential-shaped string:** a private-key block, an AWS access key, an
+  `sk-`/`sk-ant-` key, a `gh[pousr]_` or `github_pat_` GitHub token, a Slack
+  `xox[abprs]-` token, a Google `AIza…` key, a JWT, a password/secret/token/API
+  key assignment, or a run of 40 or more lower-case or upper-case hex digits.
+  Scanned: every `.html .css .js .json .svg .txt .toml .md` file in the output,
+  plus `content/site.toml`, `src/index.html`, `src/style.css` and `src/app.js`.
+  Binary files, such as the résumé PDF and images, are not scanned.
+- **Anything that would make the browser contact another site**, in the
+  output's `.html`, `.css`, `.js` and `.svg` files: a `src`/`href` (including
+  `xlink:href`) on `script`, `link`, `img`, `image`, `source`, `iframe`,
+  `video`, `audio`, `object` or `embed` that starts `http://`, `https://` or
+  `//`; such an address in any `srcset` entry or a `poster`; CSS `url()` or
+  `@import` of one; a static or dynamic `import` of one. `fetch(`,
+  `new XMLHttpRequest`, `new WebSocket`, `new EventSource` and
+  `navigator.sendBeacon` are refused whatever their address. Ordinary `<a href>`
+  links and the page's canonical link are allowed.
+- **A colour written directly in a stylesheet**, in the declaration values of
+  `src/style.css` and the selected minimap's `style.css`: `#rgb`, `#rgba`,
+  `#rrggbb`, `#rrggbbaa`, `rgb()`/`rgba()` with number channels (comma- or
+  space-separated), and `hsl()`/`hsla()`. Allowed: `#000`, `#fff`, `#000000`,
+  `#ffffff`, the print stylesheet's greys `#ccc` and `#222`, and black or white
+  `rgb()`/`rgba()` at any opacity. Selectors (an id such as `#fab`), comments
+  and `url()` are not read as colours.
+- **A skill with no explainer.** Every item of a skills group, every project
+  stack item and every project domain badge needs a file in `content/topics/`
+  whose name or alias matches it (ignoring case); a skills group with
+  `linked = false` is exempt.
+- **Two explainers claiming the same skill:** a name or alias, ignoring case,
+  claimed by two files in `content/topics/`.
+- **A missing local file:** every `src`/`href` (double- or single-quoted) and
+  every `srcset` entry on every output page, and every `url()` in `style.css`,
+  `photo.css`, `minimap.css` and `fonts.css`, must name a file that exists in
+  the output.
+- **The owner's first name shortened on its own**, anywhere the credential scan
+  looks.
+
+These also refuse the build, but are not fire-tested: Python older than 3.11;
+`content/site.toml`, a palette or a topic file that does not parse; a palette
+colour that is not `#rrggbb`; a topic file with a missing field or a name that
+is not lowercase letters, digits and hyphens; a minimap folder missing a file,
+or with a file that is empty or fails the credential, name or other-site
+checks; a missing photo, résumé or preview image, or a photo that is not WebP
+or PNG; markup that is
+unbalanced or used where it is not allowed; an invalid e-mail address, handle,
+host, tone, icon, photo crop or topic diagram; a template placeholder left
+unfilled; a page whose Content Security Policy meta tag differs from the
+shared policy, or that has an inline script or event handler; a file copied
+from `src/` that differs from its source; an empty generated file; and a
+script that fails `node --check` (skipped, with a notice, when Node.js is not
+installed).
 
 ## What a visitor is protected from
 
