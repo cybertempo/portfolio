@@ -1,0 +1,17 @@
+name = "Claude Code"
+tagline = "An AI coding agent that works in your terminal: reads the codebase, edits files, runs commands, and shows its work."
+pro = [
+  "Claude Code is Anthropic's agentic coding tool. Unlike an autocomplete plug-in, it operates on the whole repository from the terminal: it reads files, searches the code, plans a change, edits, runs the tests and build commands, reads the results and iterates. It can drive a browser to check a page, run a shell command, and read the output — the same loop a developer runs, with the developer directing and reviewing rather than typing.",
+  "**How it is used well.** The unit of work is a clear goal with a verifiable outcome: \"make the build refuse a chip with no explainer, and prove it with a fake one\". The agent proposes, the developer reads the diff — every diff — and the tests and gates decide. Its value is highest where the work is well-specified and mechanically verifiable, and lowest where the requirement itself is unclear; it will confidently build the wrong thing if asked to.",
+  "**Trade-offs.** Speed and breadth versus confident error: it can produce fluent code with a subtle bug, and it can drift from the requested scope. Mitigations are the same as for any collaborator — small steps, tests that can fail, gates that refuse, and never merging what has not been read. It also changes the skill profile: specifying, reviewing and verifying matter more than typing.",
+  "**Here.** This portfolio — its renderer, its gates, its deploy-and-prove pipeline and its record — was built this way, with the owner deciding every design and content point and the agent doing the construction, then proving each gate against a case that must fail. The finding register in the project's documentation records where that went wrong and what was learned.",
+]
+noob = [
+  "Claude Code is an AI helper that lives in the terminal — the text window programmers use. You tell it what you want in plain words, it reads your project, makes the changes, runs the tests to check they work, and shows you exactly what it did.",
+  "It's like pairing with a very fast partner who never gets tired. You still decide what to build, and you still read and check the work — that checking is the important part, because a fast partner can also be fast at being wrong.",
+  "This website was built with it: every colour, animation and check was decided by a person and constructed by the agent, then tested.",
+]
+[diagram]
+kind = "flow"
+items = ["You describe the goal", "Agent reads the code", "Edits + runs tests", "You review the diff"]
+caption = "The developer moves from writing every line to directing and verifying the work."

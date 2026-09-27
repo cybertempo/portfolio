@@ -1,0 +1,17 @@
+name = "Desktop app"
+aliases = ["Desktop"]
+tagline = "Software installed and run on a computer, with its own window and access to the machine — as opposed to a page in a browser."
+pro = [
+  "A desktop application runs directly on the operating system with capabilities a browser page is denied: reading and writing local files, running background processes, system notifications, hardware access, and working offline. It is distributed as an installer or package rather than a URL. Native toolkits (Swift/AppKit, WinUI, Qt, GTK) give the best integration; cross-platform frameworks (Electron, Tauri, Flutter) let one codebase target every OS.",
+  "**When it is the right shape.** When the software must talk to something local — a blockchain node, a database, a device, a large working set on disk — or must run without a server, or needs to be trusted with the user's machine in ways a web page cannot be. A desktop app that only shows remote data is usually a web app wearing a costume.",
+  "**Trade-offs.** Installation is friction; updates must be shipped and applied; each platform has its own packaging, signing and sandboxing rules. Cross-platform frameworks trade size and memory for one codebase. Security is the developer's responsibility in a way it is not on the web: the app runs with the user's permissions.",
+  "**Here.** The multi-level permissioned blockchain app is a desktop app because its node runs locally: an Electron + React shell with a FastAPI blockchain node beside it, packaged for Windows, macOS and Linux, keeping keys and chain state on the user's own machine.",
+]
+noob = [
+  "A desktop app is a program you install — it has its own icon and window and works without a browser, and it can do things a web page isn't allowed to, like save files anywhere on your computer or keep running in the background.",
+  "It's the right choice when the program needs to work with something on your own machine, or without internet. The blockchain app on this site is one: it runs on your computer and talks to a blockchain node running right beside it.",
+]
+[diagram]
+kind = "stack"
+items = ["Your app window", "Framework (Electron)", "Operating system", "Local files & network"]
+caption = "Installed software sits on the OS and can reach what a browser page can't."

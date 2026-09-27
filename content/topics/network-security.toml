@@ -1,0 +1,18 @@
+name = "Network security"
+aliases = ["Systems & network security"]
+tagline = "Deciding who and what may reach a system, enforcing it where you control it, and proving the enforcement works."
+pro = [
+  "Network security is the practice of controlling what can reach a system over the wire: firewalls with default-deny policies, encrypted transport (TLS, VPN tunnels), segmentation so that one compromised host cannot see the rest, authentication at every entry point, and monitoring that notices what should not be happening. Its founding assumption is that the surrounding network is hostile — a company LAN, a café, the internet: all the same.",
+  "**How it is done.** Enumerate every listening port and close what is not needed; put every service behind either a VPN or SSH, never plaintext on the LAN; enforce rules on the machine you control (the server's firewall), never on a client setting the user could edit; separate the rescue path from the service path; and log denials as well as accepts. Defence in depth means each layer assumes the one outside it may fail.",
+  "**The proof problem.** A firewall rule that has never been tested against an attempt it should block is a belief. The lab's rule: every negative check has a positive control — a test that must succeed alongside the one that must fail — because a broken test and a secure system produce the same silence. Remote access is tested from a remote network, not from the desk next to the server.",
+  "**Here.** The personal server is a network-security project end to end: nftables default-deny, key-only SSH, WireGuard and AmneziaWG tunnels as the only way in, per-person per-service access derived from one table, and a test suite in which each rule is proven from the far side. The NPTEL Cryptography and Network Security course is the theory behind it.",
+]
+noob = [
+  "Think of a castle. Network security is deciding which gates exist, who gets a key, and making sure nobody can climb the wall — and then actually trying to climb the wall yourself to check.",
+  "On a computer, the gates are network **ports**, the keys are passwords and cryptographic keys, and the wall is the **firewall**. The rule is: every gate is closed unless there's a reason to open it, and every visitor goes through one guarded gate (a VPN tunnel) rather than knocking on the walls.",
+  "The hard part isn't building the wall, it's proving it holds: a test that only checks \"nobody got in\" passes just as happily when the test itself is broken. So you always include one thing that *must* get through.",
+]
+[diagram]
+kind = "stack"
+items = ["Firewall: deny by default", "Encrypted tunnel (VPN)", "Key-only login", "Isolated services", "Proven by tests that fail"]
+caption = "Layers, each assuming the one above it might be breached."

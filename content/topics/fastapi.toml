@@ -1,0 +1,17 @@
+name = "FastAPI"
+tagline = "A modern Python framework for building web APIs quickly, with automatic validation and documentation."
+pro = [
+  "FastAPI is a Python web framework built on Starlette (the ASGI toolkit) and Pydantic (data validation from type hints). You declare an endpoint as a function whose parameters and return type are annotated Python types; FastAPI parses the request, validates it against those types, serialises the response, and generates an OpenAPI specification and interactive docs (Swagger UI) — all from the annotations. It is async-native and among the fastest Python frameworks.",
+  "**How it works.** A request arrives via an ASGI server (uvicorn); FastAPI matches the route, coerces path/query/body data into your typed models, injects dependencies (database sessions, the current user) through its dependency-injection system, and calls your function. Invalid input never reaches your code — the client gets a structured 422 with the exact field that failed. Background tasks, WebSockets and middleware are built in.",
+  "**Trade-offs.** It is an API framework, not a full-stack one: templates, admin panels and ORMs are your choice (SQLAlchemy is the usual pairing). The async model is powerful but mixing blocking calls into async endpoints silently kills throughput. The validation-from-types design means your data models *are* your documentation, which is a discipline worth having.",
+  "**Here.** FastAPI is the back end of CommitBot — the Slack event handlers, the server-rendered HTMX dashboard and the OIDC login — and the local node that the blockchain desktop app talks to over HTTP.",
+]
+noob = [
+  "An API is a way for programs to talk to each other over the internet: one asks a question in a fixed format, the other answers. FastAPI is a tool for writing the answering side in Python.",
+  "You describe what a question should look like — \"a commitment has a text and a due date\" — and FastAPI checks every incoming question against that description, rejects the broken ones with a clear message, and even writes the instruction manual (the documentation page) for you automatically.",
+  "It's called *fast* twice over: fast to write, because so much is automatic, and fast to run, because it's built on modern asynchronous Python.",
+]
+[diagram]
+kind = "flow"
+items = ["Client request", "FastAPI validates", "Your Python function", "JSON response"]
+caption = "Bad requests never reach your code; good ones arrive already checked and typed."

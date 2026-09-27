@@ -1,0 +1,17 @@
+name = "AmneziaWG"
+tagline = "WireGuard with obfuscation, so the tunnel does not look like a VPN to whoever is watching the wire."
+pro = [
+  "AmneziaWG is a fork of WireGuard that keeps the cryptography unchanged and alters the **shape** of the traffic: it adds a configurable amount of junk data to handshake packets, prepends random-length junk packets, and randomises the message-type header values that identify WireGuard on the wire. Deep-packet inspection that fingerprints WireGuard's fixed handshake sizes and header bytes then sees nothing it recognises.",
+  "**How it works.** Both peers share the same obfuscation parameters (junk sizes, header values) in their config; a standard WireGuard peer cannot talk to an Amnezia peer and vice versa. Everything after the disguise is plain WireGuard, so performance and security properties are the same. Clients exist for the major desktop and mobile platforms.",
+  "**Trade-offs.** Obfuscation is an arms race, not a guarantee: a censor that blocks all unknown UDP, or throttles by traffic pattern, will still interfere; it defeats signature matching, not statistical analysis. It also adds a second configuration surface to keep in sync. The value is a **second path** when the first is blocked, not a replacement for it.",
+  "**Here.** The personal server runs AmneziaWG alongside plain WireGuard, on a network where VPN protocols are sometimes interfered with. Same keys, same services behind it, different silhouette on the wire — so the route in survives the day the ordinary tunnel is throttled.",
+]
+noob = [
+  "Some networks look at your traffic and block anything that looks like a VPN. AmneziaWG is WireGuard wearing a disguise: the same secure tunnel, but the packets are padded and relabelled so they don't look like one.",
+  "Both ends have to agree on the disguise — the same padding and the same fake labels — and after that it works exactly like the normal tunnel.",
+  "It's a backup route: if the ordinary tunnel gets blocked, this one still gets through. Disguises don't beat every censor, but they beat the common kind that just matches a known pattern.",
+]
+[diagram]
+kind = "flow"
+items = ["WireGuard packet", "+ junk & disguise", "Looks like noise", "Passes inspection"]
+caption = "Same encryption, different silhouette."

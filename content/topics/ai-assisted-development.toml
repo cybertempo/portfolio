@@ -1,0 +1,18 @@
+name = "AI-assisted development"
+aliases = ["AI-assisted dev"]
+tagline = "Building software with an AI agent in the loop — and keeping the judgement, verification and responsibility human."
+pro = [
+  "AI-assisted development uses large language models as active collaborators in engineering work: drafting implementations, explaining unfamiliar code, writing tests, executing multi-step changes, and reviewing diffs. It ranges from inline completion (Copilot-style) to autonomous agents that read, edit and run code (Claude Code, Cursor's agent mode). The productivity gain on well-specified work is large; the risk is confident, plausible, wrong output.",
+  "**The discipline that makes it work.** Treat the model as a capable junior colleague with no memory of yesterday: give it a precise goal and the constraints; make it verify (run the tests, run the build, show the output); read every line it changes; keep the design decisions and the security-sensitive code under human judgement. Gates that *refuse* rather than warn — type checks, tests, linters, custom validators — are what turn speed into safe speed.",
+  "**What changes.** The bottleneck moves from typing to specifying and verifying. Good engineers get faster; unclear thinking gets faster too, and produces more wrong code more quickly. Knowing *what* to build, *why*, and *how to prove it works* becomes the job; the model does the construction. Understanding the fundamentals still matters, because reviewing code you could not have written is not reviewing.",
+  "**Here.** Every 2026 project on this site was built AI-assisted with Claude Code as the agent, under the lab's rules: every mechanism is proven with a test that can fail, every decision is recorded, and the finding register documents what the agent got wrong and how it was caught. It is listed as a core domain because it is now how the work is done — not instead of engineering, but as engineering's newest tool.",
+]
+noob = [
+  "Instead of typing every line of a program yourself, you work with an AI that can write and change code when you explain what you want. You become more like a director than a typist — deciding what to build and checking the result.",
+  "The AI can be confidently wrong, so the real skill is checking: running the tests, reading what changed, and never trusting \"it should work\". That habit is the whole point. Good engineers get much faster; careless ones make mistakes faster.",
+  "It's the biggest change in how software gets built in decades, and knowing how to use it well — while still understanding what the code does — is a skill in its own right.",
+]
+[diagram]
+kind = "hub"
+items = ["Developer judgement", "AI drafts code", "Tests that can fail", "Review every diff", "Gates that refuse"]
+caption = "The agent does the typing; the human owns the direction and the proof."

@@ -1,0 +1,17 @@
+name = "nftables"
+tagline = "The Linux kernel's packet filter — the firewall that decides which network traffic is allowed in, out or through."
+pro = [
+  "nftables is the packet-filtering framework in the Linux kernel, the successor to iptables. Rules are organised in **tables** (by address family) and **chains** hooked into the kernel's packet path — `input`, `output`, `forward`, plus NAT hooks — and evaluated in order until a verdict: `accept`, `drop`, `reject`, or jump to another chain. **Sets** and **maps** hold addresses, ports and interfaces so a large policy stays a few lines and a lookup rather than hundreds of rules.",
+  "**How a policy is built.** Start with `policy drop` on input and forward; allow established and related connections so replies get through; allow loopback; allow exactly the services you offer, on exactly the interfaces they should be reachable from (the tunnel interface, not the LAN); log what is dropped. Because rules are evaluated in the kernel, they hold regardless of what any application does — and regardless of any client's configuration.",
+  "**Trade-offs and pitfalls.** The rule language is precise and unforgiving: a wrong interface name or a missing `ct state established` rule locks you out of your own server (always test from a second session before closing the first). Stateful rules must be first; order matters; IPv6 needs its own attention or it becomes the unlocked side door. Generating the ruleset from a single source of truth is far safer than hand-editing.",
+  "**Here.** The personal server's firewall is nftables with default deny, rendered from one configuration file that also feeds DNS and the reverse proxy, so an address is written once. It is the control the lab's rules refer to when they say access is enforced on the server — and every rule is proven by a test that must be dropped and one that must pass.",
+]
+noob = [
+  "Every message that arrives at a computer over the network is a **packet**. nftables is the bouncer at the door, checking each packet against a list: on the list, come in; not on it, go away — silently, so the sender can't even tell there's a door.",
+  "The safest list starts with \"nobody\" and adds only the guests you actually want. That's called **default deny**. It's built into the heart of Linux, so it works no matter what the programs on the computer are doing.",
+  "The classic beginner mistake is writing a rule that locks *you* out of your own server. So you always test a new list from a second window before you trust it.",
+]
+[diagram]
+kind = "flow"
+items = ["Packet arrives", "nftables rules", "Accept → service", "Drop → silence"]
+caption = "Every packet is checked; what is not explicitly allowed is dropped without a reply."

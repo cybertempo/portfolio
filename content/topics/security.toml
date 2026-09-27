@@ -1,0 +1,17 @@
+name = "Security"
+tagline = "The discipline of assuming things will be attacked and making sure that when they are, little is lost."
+pro = [
+  "Security is a way of thinking before it is a set of tools: every system has attackers, some of them patient, and the job is to make what they can do small, detectable and recoverable. It spans network security (what can reach you), systems security (what a foothold gives), application security (what your own code allows), cryptography (what stays secret and provable) and operations (keys, backups, incident response). Threat modelling — who, what, how, so what — comes first.",
+  "**The principles that recur.** Default deny; least privilege; defence in depth; separate what must not fail together; assume breach and plan the recovery; keep secrets in one place and reproduce them nowhere; and above all **verify** — a control that has never been exercised against an attempt it should stop is a belief. Security by obscurity is not security, but obscurity is a fine extra layer on top of real controls (a VPN port that does not answer scanners).",
+  "**The honest trade-off.** Security that costs too much convenience gets bypassed by its own users; the owner's stated principle is that privacy and security must not come at the cost of convenience, which is a design constraint, not a compromise. Good security is mostly invisible: one key per device, one tunnel that just works, a firewall nobody notices until it saves them.",
+  "**Here.** Security is the thread through the whole portfolio: a hardened server proven from the outside, signatures and access control built into a blockchain from primitives, an LLM-driven vulnerability scanner, and a public site that loads nothing from anyone else, sets a strict content-security policy, and refuses to build if a secret-shaped string appears in it.",
+]
+noob = [
+  "Security is thinking like the person trying to break in, before they do. Which door would they try? What would they take? What would they do next? Then you close that door, make the prize small, and check it's really closed.",
+  "The rules that keep coming back: everything is closed unless there's a reason to open it; every program gets only the permission it needs; and you never just trust that something is safe — you try to break it yourself.",
+  "Good security should be almost invisible. If it's annoying, people work around it — so the goal is safe *and* convenient, which is harder and more interesting than safe alone.",
+]
+[diagram]
+kind = "flow"
+items = ["Assume attack", "Close the door", "Try to open it", "Prove it stayed shut"]
+caption = "Not done until you have tried to break your own control."

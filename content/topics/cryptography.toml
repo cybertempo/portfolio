@@ -1,0 +1,18 @@
+name = "Cryptography"
+aliases = ["Cryptography & NetSec"]
+tagline = "The mathematics of secrets and proofs: hiding data, proving who sent it, and detecting if it changed."
+pro = [
+  "Cryptography provides four things. **Confidentiality** through encryption — symmetric ciphers (AES, ChaCha20) for bulk data with a shared key, asymmetric (RSA, elliptic curves) for exchanging keys and small messages. **Integrity** through hash functions (SHA-256, BLAKE2) that fingerprint data so any change is detectable. **Authenticity** through digital signatures (ECDSA, Ed25519) and MACs that prove who produced a message. **Key agreement** (Diffie–Hellman over elliptic curves) that lets two parties derive a shared secret over a public channel.",
+  "**How the pieces compose.** TLS combines all four to secure the web: a certificate signed by a CA proves the server's identity, an ECDH exchange agrees a session key, AES-GCM or ChaCha20-Poly1305 encrypts and authenticates the traffic. WireGuard does the same with a fixed, modern suite. A blockchain is hashes and signatures: hashes link blocks and build Merkle trees; signatures authorise transactions. Password storage uses slow, salted hashes (scrypt, Argon2) so a stolen database is still expensive to crack.",
+  "**The rules practitioners follow.** Never invent your own cipher or protocol; use vetted primitives through well-maintained libraries; understand them well enough to use them correctly, because almost every real failure is misuse — a reused nonce, an unauthenticated ciphertext, a key in a log file, a random number that was not random. Zero-knowledge proofs (behind ZK rollups) are the current frontier: proving a statement is true without revealing why.",
+  "**Here.** The NPTEL Cryptography and Network Security course is the theory; the practice is ECDSA signing and Merkle trees implemented from primitives in the blockchain desktop app, hash-linked blocks in the deployment platform, ZK-rollup deployment for SmartPact, and the daily use of WireGuard, SSH keys and TLS on the server.",
+]
+noob = [
+  "Cryptography is the science of secret codes, but modern codes do more than hide messages. A **hash** is a fingerprint that changes completely if even one letter changes. A **signature** proves who wrote something. **Encryption** scrambles a message so only the right person can read it.",
+  "Put those together and you get the padlock in your browser, the tunnel to a private server, and the way a blockchain knows who sent what. The maths is hard; using it correctly is the real skill — most break-ins come from using good codes badly, not from breaking them.",
+  "The projects on this site build these pieces by hand in the blockchain apps, and rely on them every day in the server.",
+]
+[diagram]
+kind = "hub"
+items = ["Cryptography", "Encrypt (hide)", "Hash (fingerprint)", "Sign (prove sender)", "Key exchange"]
+caption = "Four tools; nearly every secure system is a combination of them."

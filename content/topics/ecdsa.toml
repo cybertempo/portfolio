@@ -1,0 +1,18 @@
+name = "ECDSA"
+aliases = ["ECDSA / PKI"]
+tagline = "Elliptic-curve digital signatures — how a transaction proves who authorised it without revealing the key."
+pro = [
+  "ECDSA (Elliptic Curve Digital Signature Algorithm) is a public-key signature scheme. A private key is a random integer; the public key is that integer multiplied by a fixed base point on an elliptic curve (secp256k1 for Bitcoin and Ethereum, P-256 for much of TLS). Signing a message hash with the private key produces a pair `(r, s)`; anyone with the public key can verify the pair matches the hash. Keys are short (256 bits gives ~128-bit security) and operations are fast, which is why it displaced RSA in blockchains and most of TLS.",
+  "**How it works, in outline.** The security rests on the elliptic-curve discrete-logarithm problem: given the public point, recovering the private integer is infeasible. Each signature uses a fresh random **nonce** `k`; `r` is derived from `k·G`, and `s` combines the hash, the private key and `k`. Verification recomputes a point from `(r, s)`, the hash and the public key and checks it matches `r`.",
+  "**The classic failure.** If the nonce is ever reused or predictable, two signatures leak the private key by simple algebra — this is how Sony's PlayStation 3 signing key was extracted in 2010 and how several Bitcoin wallets were emptied. Modern practice derives `k` deterministically from the key and message (RFC 6979) or uses Ed25519, which has no per-signature randomness at all. Never implement the curve arithmetic yourself for production; do implement it once to understand it.",
+  "**Here.** The permissioned blockchain desktop app implements signing and verification from the primitives up — key generation, transaction signing, signature checks in block validation — and the NIT Calicut platform and SmartPact rely on the same scheme through their libraries. It is also the mechanism behind SSH keys and the lab's WireGuard peers (a different curve, the same idea).",
+]
+noob = [
+  "A digital signature is like a wax seal only you can make, but anyone can check. You keep a secret number (the **private key**); from it comes a public number everyone can see (the **public key**).",
+  "When you sign a message with the secret, people can use the public number to confirm it was really you — and that nobody changed the message on the way — without ever learning your secret. That's what lets a blockchain know that *you* authorised sending your coins.",
+  "The one rule: the random number used in each signature must never repeat. When Sony reused one, hackers worked out the PlayStation's master key from just two signatures.",
+]
+[diagram]
+kind = "flow"
+items = ["Message hash", "Sign with private key", "Signature", "Verify with public key"]
+caption = "The private key never leaves you; the public key lets everyone check."

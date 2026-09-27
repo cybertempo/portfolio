@@ -1,0 +1,17 @@
+name = "HTMX"
+tagline = "Interactive pages without a JavaScript framework: HTML attributes that fetch and swap fragments from the server."
+pro = [
+  "HTMX extends HTML with attributes that let any element make an HTTP request and swap the response into the page: `hx-get`, `hx-post`, `hx-trigger` (which event), `hx-target` (where), `hx-swap` (how). The server returns HTML fragments, not JSON; the browser never runs application logic. It is the modern form of the \"hypermedia\" architecture the web was designed around, and it reduces a typical CRUD front end to templates plus a 14 KB script.",
+  "**How it works.** A button with `hx-post=\"/commitments\" hx-target=\"#list\" hx-swap=\"beforeend\"` posts the form, and the returned `<li>` is appended to the list — no fetch code, no state store, no JSON serialisation on either side. Partial templates on the server render both the full page and the fragments. Progressive enhancement is natural: without JavaScript the same links and forms still work as full-page requests.",
+  "**Trade-offs.** State lives on the server, which is simpler to reason about and slightly chattier over the network. Highly interactive, client-heavy UIs (drag-and-drop editors, real-time dashboards with local state) are a poor fit; forms, lists, dashboards and admin panels are an excellent one. It also keeps the whole application in one language and one process.",
+  "**Here.** CommitBot's dashboard is FastAPI templates with HTMX — commitment lists, reassignment flows, reminder settings — served by the same process as the Slack bot and API, with no build step and no client-side framework to maintain.",
+]
+noob = [
+  "Normally, making a page update without reloading needs a lot of JavaScript. HTMX lets you write a tiny instruction on a button — \"when clicked, fetch this and put it here\" — and it does the rest.",
+  "The server sends back a piece of finished page, and HTMX swaps it in. The page never has to understand the data, just where to put the new bit.",
+  "It's simple, fast to build, and the whole app stays on the server in one language — which is why CommitBot's dashboard uses it instead of a big framework.",
+]
+[diagram]
+kind = "flow"
+items = ["<button hx-get>", "Request to server", "HTML fragment", "Swapped into page"]
+caption = "The server returns HTML, not data; the page updates in place."

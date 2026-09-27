@@ -1,0 +1,17 @@
+name = "Systems security"
+tagline = "Hardening the machine itself: least privilege, minimal attack surface, and a rebuild path you have rehearsed."
+pro = [
+  "Systems security is about the host rather than the wire: who may log in and how (key-only SSH, no passwords, no root login), what runs (only what is needed, pinned and updated), with what privileges (dedicated users, unprivileged containers, capabilities dropped), what is logged, and how the machine is rebuilt when — not if — something goes wrong. Its measures are the **blast radius** of a compromise and the **time to rebuild clean**.",
+  "**How it is done.** Start from a minimal install; every service gets its own user and the narrowest permissions that work; secrets live in one place with tight permissions and are never in logs or documents; automatic security updates for the base system, deliberate updates for pinned services; backups that are encrypted, off-site, owned by a non-root user and restore-tested. Out-of-band management (a rescue path) is separate from the service path and never public.",
+  "**The proof discipline.** A hardening step that is asserted is not a step; it is proven by trying the thing it forbids — logging in with a password, reaching a port from the wrong side, reading a secret as the wrong user — and watching it fail, beside a control that must succeed. Drift is checked on a schedule by comparing documents to the live system, because a machine that has drifted from its documentation cannot be rebuilt from them.",
+  "**Here.** The personal server is the worked example: key-only SSH, dedicated service users, pinned Docker images, secrets in one file reproduced nowhere, restic backups owned by the owner and restored onto a clean machine, an nftables policy rendered from one configuration, a rescue tunnel separate from the service tunnel, and a verifier that compares the documents against the live server before the documents may even be rebuilt.",
+]
+noob = [
+  "If network security is the castle wall, systems security is what's inside: locked rooms, keys that open only one door, no spare doors left open by accident, and nobody carrying the master key around.",
+  "Every program on the machine gets only the permissions it needs, updates are applied on purpose, and secrets are kept in one locked drawer. And you don't just *say* the doors are locked — you try them.",
+  "It also means having a plan to rebuild the whole castle from drawings if it ever burns down — and practising that plan before you need it. The server on this site was rebuilt from its backups once, deliberately, to prove it could be.",
+]
+[diagram]
+kind = "stack"
+items = ["Key-only SSH", "Least-privilege users", "Pinned, isolated services", "Backups, restore-tested"]
+caption = "Each layer limits what a break-in at the layer above can reach."

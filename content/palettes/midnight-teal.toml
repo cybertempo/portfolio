@@ -1,0 +1,17 @@
+# Midnight Teal — black ink, midnight-grey panels and electric teal.
+# Cobalt/crimson separate the glitch layers; teal remains the main accent.
+name      = "Midnight Teal"
+bg        = "#05080b"
+bg2       = "#0b1118"
+panel     = "#111820"
+panel2    = "#0a1016"
+text      = "#e8f4f3"
+muted     = "#a0b5bd"
+faint     = "#7a909d"
+stroke    = "#000000"
+primary   = "#00e5c4"
+secondary = "#648dff"
+tertiary  = "#34cfff"
+success   = "#38efb0"
+warning   = "#e7ed61"
+danger    = "#ff5261"

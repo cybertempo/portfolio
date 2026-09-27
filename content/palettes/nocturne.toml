@@ -1,0 +1,17 @@
+# Nocturne — true black, clearly separated midnight-grey surfaces and teal.
+# Muted violet and antique gold are small magical accents, not page washes.
+name      = "Nocturne"
+bg        = "#000000"
+bg2       = "#111317"
+panel     = "#20242b"
+panel2    = "#15181e"
+text      = "#edf3f2"
+muted     = "#aab8bf"
+faint     = "#82949e"
+stroke    = "#000000"
+primary   = "#00e5c4"
+secondary = "#8b86c9"
+tertiary  = "#69ccc8"
+success   = "#6ed6b0"
+warning   = "#d8bf86"
+danger    = "#ed6676"

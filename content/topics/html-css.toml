@@ -1,0 +1,18 @@
+name = "HTML5 & CSS3"
+aliases = ["HTML5/CSS3", "HTML/CSS", "HTML", "CSS"]
+tagline = "The structure and the style of every web page."
+pro = [
+  "HTML marks up content and its meaning: headings, paragraphs, lists, links, forms, images, and the semantic sections (`nav`, `main`, `article`, `section`) that screen readers and search engines rely on. CSS describes presentation: layout (flexbox, grid), typography, colour, spacing, motion and responsiveness. Together with JavaScript they are the three layers of the web; a page can be complete with only the first two.",
+  "**Modern CSS.** Custom properties (variables) make theming a matter of redefining tokens; `clamp()` and viewport units give fluid type; grid and flexbox handle layouts that once needed hacks; media and container queries adapt to the device; `mask`, `mix-blend-mode`, `color-mix()` and animations produce effects that used to need images or scripts; `prefers-reduced-motion` and `:focus-visible` are how a page respects the user. The cascade and specificity are the rules that decide which of two competing declarations wins — and the source of most \"why doesn't my style apply\" bugs.",
+  "**Trade-offs.** HTML and CSS are forgiving — a mistake rarely breaks the page, which makes them easy to start and easy to get subtly wrong (inaccessible markup, specificity wars, layouts that break at one width). Frameworks (Tailwind, Bootstrap) trade control for speed; hand-written CSS with a token system stays smaller and more legible for a site of this size.",
+  "**Here.** This site is hand-written HTML and CSS rendered from templates: a palette of fourteen tokens, layouts that adapt from phone to desktop with no framework, the dot-screen portrait and decode animation done entirely in CSS masks and keyframes, and an accessibility pass (skip link, focus rings, reduced motion, semantic sections). Two of its findings were pure CSS: a specificity bug and a pseudo-element used twice.",
+]
+noob = [
+  "HTML is the skeleton of a web page: this is a heading, this is a paragraph, this is a button. CSS is the clothes: what colour, what size, where on the screen, and how it moves.",
+  "Every web page you have ever seen is these two, plus JavaScript for behaviour. You can view any page's HTML and CSS in your browser — right-click, \"Inspect\" — which is how most web developers first learned.",
+  "This whole site is hand-written HTML and CSS: the colours are a list of fourteen named values, and the animated photo is done with CSS alone, no images or scripts.",
+]
+[diagram]
+kind = "stack"
+items = ["JavaScript — behaviour", "CSS — appearance", "HTML — structure & meaning"]
+caption = "Three layers; each page has at least the bottom one."

@@ -1,0 +1,18 @@
+name = "Back end"
+aliases = ["Backend"]
+tagline = "The server side of an application: the logic, data and APIs the user never sees directly."
+pro = [
+  "The back end is everything that runs on the server: the API that receives requests, the business logic that decides what they mean, the data layer that persists state, the background jobs that run on schedules, and the integrations with other services. Its concerns are correctness, security (every request is untrusted), data modelling, concurrency, performance under load, and observability — knowing what the system did when something goes wrong.",
+  "**The shape of a typical one.** A framework (FastAPI, Express, Spring) handles HTTP and routing; validation rejects bad input at the edge; an authentication layer establishes who is asking; the domain logic lives in plain code with tests; a database (SQL or document) holds state with transactions where consistency matters; a cache and a queue take the fast and the deferred paths; a scheduler runs timed work. Logs, metrics and health checks make it operable.",
+  "**Trade-offs.** Monolith versus services: one deployable is simpler and usually right until scale or team size argues otherwise. Sync versus async: async handles many waiting connections cheaply but is harder to reason about. Every dependency added is something to secure, update and back up. The back end is where security failures have consequences, which is why validation, least privilege and parameterised queries are not optional.",
+  "**Here.** CommitBot (FastAPI, SQLAlchemy, APScheduler, slack-bolt, Anthropic API), the blockchain node behind the desktop app (FastAPI), the vulnerability scanner (Express, Gemini), SmartPact's API and the multi-consensus platform (Express, Redis, MongoDB, IPFS) are all back ends — and the personal server is the infrastructure they would run on.",
+]
+noob = [
+  "When you tap \"buy\" in an app, the part that checks your account, updates the stock and records the order lives on a server far away. That's the back end — the engine room nobody sees.",
+  "It receives requests, checks they're allowed and make sense, does the work, saves the result, and answers. It also runs the jobs that happen on a timer, like sending reminders.",
+  "Most of the projects on this site have a back end; CommitBot is almost entirely one.",
+]
+[diagram]
+kind = "flow"
+items = ["Front end", "API request", "Back end logic", "Database"]
+caption = "Rules and data live behind the API."

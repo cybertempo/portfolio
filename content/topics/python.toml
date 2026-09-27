@@ -1,0 +1,17 @@
+name = "Python"
+tagline = "A general-purpose language that reads almost like English and has a library for everything."
+pro = [
+  "Python is a dynamically typed, garbage-collected, interpreted language with an unusually large standard library and the biggest third-party ecosystem of any language (PyPI). Its design priorities are readability and speed of writing: significant indentation, a small core syntax, and \"batteries included\". It dominates scripting, automation, data science, machine learning and a large share of back-end services (FastAPI, Django, Flask).",
+  "**How it runs.** The reference interpreter, CPython, compiles source to bytecode and executes it on a virtual machine. There is no separate build step, which is why iteration is fast. The Global Interpreter Lock means only one thread runs Python bytecode at a time, so CPU-bound parallelism uses processes (`multiprocessing`) or native extensions, while I/O-bound concurrency uses `asyncio`. Type hints (`def f(x: int) -> str`) are optional annotations checked by tools such as mypy and used at runtime by frameworks like FastAPI and Pydantic.",
+  "**Trade-offs.** Raw execution speed is well below C, Java or Go; numeric work is delegated to native libraries (NumPy, PyTorch) so the Python you write is glue, not the hot loop. Dynamic typing makes large codebases harder to refactor without tests and type checkers. Packaging has history: use virtual environments and pin dependencies, and know that `pip install` outside a venv is refused on modern systems (PEP 668).",
+  "**Here.** Python is the back end of CommitBot (FastAPI, SQLAlchemy, APScheduler), the node of the blockchain desktop app, the machine-learning coursework (scikit-learn), and the renderer and every gate that builds this site — standard library only, so the build has no dependencies to rot.",
+]
+noob = [
+  "Python is a language for telling a computer what to do, designed so that the instructions look a lot like plain English. **print(\"hello\")** does exactly what it says, and a whole useful program can be ten lines long.",
+  "You write your instructions in a text file and Python reads them line by line, doing each one as it goes — no waiting for a \"build\". If something is wrong it stops at that line and tells you.",
+  "It's like a giant LEGO set where most of the pieces are already built: want to download a web page, sort a list, draw a chart, or train an AI model? Somebody already wrote that piece, and you snap it on with one line. That's why it's the first language most people learn and the one most scientists use.",
+]
+[diagram]
+kind = "flow"
+items = ["Your .py file", "Python interpreter", "Result on screen"]
+caption = "Python reads your file line by line and runs it straight away — no separate compile step."

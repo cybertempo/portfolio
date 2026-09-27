@@ -1,0 +1,31 @@
+<nav class="rift" aria-label="{{map_title}}">
+  <div class="rift-title" aria-hidden="true"><span class="rift-signal"></span>{{map_title}}</div>
+  <div class="rift-track">
+    <svg class="rift-threads" aria-hidden="true">
+      <path class="rift-lattice"/>
+      <path class="rift-guide"/>
+      <path class="rift-silk rift-silk-echo"/>
+      <path class="rift-silk rift-silk-main"/>
+      <path class="rift-reach"/>
+    </svg>
+    <div class="rift-shard" role="slider" tabindex="0" aria-label="{{map_scrub}}" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-describedby="riftHint">
+      <svg class="shard-shape" viewBox="0 0 80 104" aria-hidden="true">
+        <g class="shard-halo"><path d="M11 38 5 52 12 67 M68 34 76 51 69 69"/><path d="M18 19 27 12 M56 87 64 79"/></g>
+        <g class="shard-fragment shard-fragment-a"><path d="m15 31 12-8-5 20Z"/></g>
+        <g class="shard-fragment shard-fragment-b"><path d="m62 56 9 13-15 8Z"/></g>
+        <g class="shard-fragment shard-fragment-c"><path d="m24 84 9 5-5 12Z"/></g>
+        <path class="shard-silhouette" d="M43 4 61 38 49 62 37 91 20 58 29 29Z"/>
+        <path class="shard-face shard-face-left" d="M43 4 38 45 20 58 29 29Z"/>
+        <path class="shard-face shard-face-right" d="m43 4 18 34-12 24-11-17Z"/>
+        <path class="shard-face shard-face-bottom" d="m20 58 18-13 11 17-12 29Z"/>
+        <path class="shard-core" d="m43 24 4 18-9 30-3-22Z"/>
+        <path class="shard-fracture" d="m18 53 18-5 13 4 14-8 M25 61l10-5 11 5 11-4"/>
+      </svg>
+    </div>
+    <ol class="rift-stops">
+{{rail_stops}}
+    </ol>
+  </div>
+  <div class="rift-readout" aria-hidden="true"><span class="rift-percent">00%</span><span class="rift-label">{{map_start}}</span></div>
+  <p class="rift-hint" id="riftHint">{{map_hint}}</p>
+</nav>

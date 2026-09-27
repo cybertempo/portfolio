@@ -1,0 +1,17 @@
+name = "Networking"
+tagline = "How computers find each other and move data: addresses, routes, ports and the protocols that carry everything."
+pro = [
+  "Networking is the layered set of protocols that moves data between machines. At the bottom, Ethernet and Wi-Fi move frames on a link; IP gives every interface an address and routes packets between networks; TCP provides reliable, ordered streams and UDP cheap datagrams; on top sit DNS (names to addresses), TLS (encryption and authentication), HTTP, SSH and everything else. Each layer only needs to understand its own job, which is why the whole thing composes.",
+  "**The concepts that matter in practice.** Subnets and routing tables decide where a packet goes next; NAT lets many private addresses share one public one and is why inbound connections need a tunnel or port-forward; ports let one machine offer many services; DNS is the map, and split DNS answers differently inside a private network; MTU, latency and bandwidth explain most \"it's slow\" questions. Reading a packet capture (Wireshark, tcpdump) is the skill that turns theory into diagnosis.",
+  "**Why it is the owner's centre of gravity.** Cloud is networking with someone else's hardware: VPCs, security groups, load balancers and private endpoints are subnets, firewalls, routers and tunnels under new names. The owner's view — that whoever controls the networks controls the world, and that understanding them beats depending on others — is the reason the server was built at all.",
+  "**Here.** The personal server is networking end to end: two VPN tunnels with their own address space, split DNS that answers private names only inside the tunnel, a reverse proxy that routes by name, NAT and firewall rules rendered from one configuration, and tests run from a remote network because that is the condition that matters.",
+]
+noob = [
+  "The internet is just computers passing messages to each other. Networking is the set of rules for that: every computer has an **address**, messages are cut into **packets**, and routers pass them along, hop by hop, until they arrive.",
+  "**Ports** are like numbered doors on a computer — a web server listens at door 443, email at another — so one machine can offer many services. **DNS** is the phone book that turns a name like example.com into an address.",
+  "\"The cloud\" is really networking with rented computers, which is why understanding networks is the key to understanding cloud — and why the server on this site was built in the first place.",
+]
+[diagram]
+kind = "flow"
+items = ["App", "TCP / UDP", "IP routing", "Wire / radio"]
+caption = "Each layer wraps the one above it; each only needs to understand its own job."

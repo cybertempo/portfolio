@@ -1,0 +1,17 @@
+name = "IPFS"
+tagline = "A peer-to-peer file system where content is found by what it is, not where it is."
+pro = [
+  "IPFS (InterPlanetary File System) addresses content by its hash: a file is split into blocks, each block is hashed, the hashes are linked into a Merkle DAG, and the root hash — the **CID** — names the whole thing. Ask the network for a CID and any node holding those blocks can serve them; the hash proves you received exactly the content you asked for. Location-independence and integrity come for free from the addressing scheme.",
+  "**How it works.** Nodes announce what they hold in a distributed hash table (Kademlia); a request walks the DHT to find providers and fetches blocks over Bitswap, a block-exchange protocol. Content is only available while some node keeps (\"pins\") it — IPFS is not automatic permanent storage; pinning services and incentive layers (Filecoin) exist for that. Mutable pointers (IPNS) let a name resolve to a changing CID.",
+  "**Trade-offs.** Retrieval of unpopular content can be slow or fail if no provider is online; there is no built-in privacy (anyone can fetch a CID they know); and \"decentralised\" hosting still depends on someone paying to keep data pinned. Its natural role in blockchain systems is the storage layer for anything too large for the chain, with only the CID recorded on-chain.",
+  "**Here.** The NIT Calicut multi-consensus deployment system used IPFS twice over: as decentralised storage for network data, and — under a constraint that forbade a conventional token — as the **incentive itself**: participants were rewarded with allocated IPFS storage space rather than coins. Turning storage into the reward was the project's central design move.",
+]
+noob = [
+  "On the normal web you ask for a file by its address — which server it's on. On IPFS you ask for it by its **fingerprint**, and whichever computer nearby has that exact file gives it to you.",
+  "Because the fingerprint is made from the contents, you can always tell if someone handed you the wrong or a changed file — it wouldn't match. The file stays available as long as at least one computer chooses to keep it.",
+  "In the blockchain project on this site, IPFS storage space itself was used as the reward for helping run the network, instead of inventing a coin — a neat answer to \"no tokens allowed\".",
+]
+[diagram]
+kind = "hub"
+items = ["Content ID (hash)", "Node A", "Node B", "Node C", "Your request"]
+caption = "Ask for a hash; any node that has the bytes can answer, and the hash proves they're right."

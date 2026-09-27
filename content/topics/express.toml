@@ -1,0 +1,17 @@
+name = "Express"
+tagline = "The minimal, unopinionated web framework for Node.js."
+pro = [
+  "Express is the de-facto standard HTTP framework for Node.js: routing (`app.get('/users/:id', handler)`), a **middleware** pipeline through which every request passes (logging, body parsing, authentication, error handling), and helpers on the request and response objects. It deliberately provides little else; validation, ORMs, templating and authentication come from the ecosystem.",
+  "**How it works.** A request enters the middleware chain in registration order; each middleware can inspect or modify it, respond, or call `next()` to pass it on. Routers group related routes. Error-handling middleware (four arguments) catches what handlers throw. This pattern — a chain of small functions — is so influential that most Node frameworks (Koa, Fastify, NestJS) are variations on it.",
+  "**Trade-offs.** Minimalism means freedom and inconsistency: two Express apps can be structured completely differently, and security defaults are yours to set (helmet for headers, rate limiting, input validation). Async errors need `express-async-errors` or explicit handling in Express 4. Fastify is faster and stricter; NestJS adds structure for large teams. Express remains the right choice for small services and for learning how HTTP servers actually work.",
+  "**Here.** Express is the back end of the vulnerability scanner (ingestion, per-user sessions, the Gemini analysis pipeline, remediation export), SmartPact's API and the multi-consensus deployment platform.",
+]
+noob = [
+  "When a browser asks a server for something, Express is the part that looks at the address (\"/products\", \"/cart\") and decides which piece of code should answer.",
+  "Every request passes through a line of small helpers first — one writes it in the log, one checks you're logged in, one reads the data you sent — and then reaches the code for that address. It's a conveyor belt with a station for each job.",
+  "It's deliberately tiny: it does the routing and lets you plug in everything else, like a base plate you build on. Three of the projects on this site have Express at the back.",
+]
+[diagram]
+kind = "flow"
+items = ["GET /products", "Middleware chain", "Route handler", "Response"]
+caption = "Each request passes through the middleware and lands on the matching route."

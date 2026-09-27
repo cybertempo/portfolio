@@ -1,0 +1,18 @@
+name = "Context API"
+aliases = ["React Context"]
+tagline = "React's built-in way to share state (the cart, the logged-in user) with any component without passing it down by hand."
+pro = [
+  "React Context lets a value declared at one point in the component tree be read by any descendant, without threading it through every intermediate component's props (\"prop drilling\"). A **Provider** supplies the value; `useContext` reads it. Combined with `useReducer` or `useState` in the provider, it becomes a small application store — enough for auth state, theme, a shopping cart.",
+  "**How it works.** When the provider's value changes, every component that reads that context re-renders. That is the whole mechanism, and also its main performance consideration: put rarely-changing, widely-needed state in Context; keep high-frequency state (typing, animation) local; split contexts so a change to one does not re-render readers of another; memoise the provider value.",
+  "**Trade-offs.** It is built in, simple and dependency-free, which is why it is the right first choice. It is not a full state-management library: no selectors, no middleware, no devtools. When an app outgrows it — many interacting slices of state, heavy updates — Zustand, Redux Toolkit or Jotai are the step up. Many apps never need that step.",
+  "**Here.** WebYes Shop holds cart and auth state in Context: cart entries keyed by product + variant (colour, size) so quantities stay correct, persisted per user in localStorage, and read by the header badge, the cart drawer, product cards and checkout without any of them being passed the cart by hand.",
+]
+noob = [
+  "Some information — what's in your cart, whether you're logged in — is needed all over the app. Passing it hand to hand through every component is tedious. Context is a shared notice-board any component can read.",
+  "When the notice-board changes, everyone reading it updates. That's simple, and it's also why you only put things on it that don't change fifty times a second.",
+  "The shopping platform keeps its cart on one of these boards, so the little badge in the header, the sliding cart and the checkout page all agree.",
+]
+[diagram]
+kind = "hub"
+items = ["Cart context", "Header badge", "Cart drawer", "Product card", "Checkout"]
+caption = "One provider, many readers; no hand-passing through the tree."

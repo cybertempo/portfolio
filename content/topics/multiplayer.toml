@@ -1,0 +1,17 @@
+name = "Multiplayer"
+tagline = "Several players sharing one game state across a network — and agreeing on what happened."
+pro = [
+  "Multiplayer means several machines must agree on one game state while messages between them take tens of milliseconds and sometimes arrive late or not at all. The standard answer is an **authoritative** host or server that owns the truth; clients send inputs, receive state, and use **prediction** (act locally at once) and **reconciliation** (correct when the server disagrees) so the game feels immediate despite latency. Interpolation smooths other players' movement between updates.",
+  "**The problems to design for.** Latency and jitter; packet loss (UDP with your own reliability for what needs it); ordering; cheating (never trust the client — the server validates); disconnects and rejoin; and matching what each player is allowed to know (a social-deduction game must not leak roles). Bandwidth is managed by sending deltas, not whole states, at a fixed tick rate.",
+  "**Trade-offs.** Server-authoritative is fair and cheat-resistant and costs a server; peer-to-peer is cheap and trusts peers; lockstep (every client simulates identically from shared inputs) suits strategy games and fails on any nondeterminism. In an engine like Unity, Netcode for GameObjects provides the transport and replication; the game still has to decide what is authoritative.",
+  "**Here.** The narrative deduction game's multiplayer systems were the owner's implementation: synchronised state across players with a host holding the truth, and the AI impostor's dialogue delivered consistently to everyone in the match.",
+]
+noob = [
+  "When four people play together from four houses, each computer has to see the same game. Messages take time to travel, so the game cleverly keeps everyone in step without anyone noticing the delay.",
+  "One computer (the host) holds the real truth; the others send what their player did and get told what actually happened. Your own game guesses ahead so it feels instant, and quietly corrects itself if the host disagrees.",
+  "The host also keeps secrets — in a deduction game, nobody's computer can be allowed to know who the impostor is except the host.",
+]
+[diagram]
+kind = "hub"
+items = ["Authoritative host", "Player 1", "Player 2", "Player 3", "Player 4"]
+caption = "One source of truth; each player sees a synchronised copy."

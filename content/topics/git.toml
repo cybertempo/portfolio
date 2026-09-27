@@ -1,0 +1,17 @@
+name = "Git"
+tagline = "Version control: a complete, branching history of every change to a project."
+pro = [
+  "Git is a distributed version-control system. It stores a project's history as a directed graph of **commits**, each a content-addressed snapshot of the whole tree plus a pointer to its parent(s). Branches are just movable pointers to commits, which makes creating one free and merging cheap. Every clone holds the full history, so there is no single point of failure and most operations are local and instant.",
+  "**How it works.** Objects (blobs, trees, commits) are named by the SHA of their content, so history cannot be silently altered without changing every hash after it — the same idea a blockchain uses. `merge` joins two lines of work with a new commit; `rebase` replays your commits onto a new base for a linear history; `bisect` binary-searches history for the commit that introduced a bug. Remotes (GitHub, GitLab, Codeberg, a bare repo on your own server) are just other clones you synchronise with.",
+  "**Trade-offs.** The model is simple and the command line is not: the same word means different things in different commands, and history rewriting (`rebase`, `reset --hard`, `push --force`) can destroy work if used on shared branches. The discipline that pays: small commits with messages that say *why*, branches per change, and never rewriting history others have pulled.",
+  "**Here.** Git holds every project on this site and is the substrate of the workflow — review, CI, reproducible builds. It is also a security tool: signed commits, protected branches, and a history that shows exactly who changed what and when.",
+]
+noob = [
+  "Git is an unlimited undo button for a whole project, with a note attached to every save saying what changed and why. You can go back to any earlier version, ever, and see exactly what was different.",
+  "It also lets a team work on the same thing at once: everyone works on their own **branch** — a parallel copy — and Git helps combine them afterwards without anyone's work being lost. Websites like GitHub are just places to keep a shared copy.",
+  "Every save is fingerprinted from its contents, so nobody can quietly change an old version — that's the same trick blockchains use, and it's why Git is trusted with the source code of nearly all the world's software.",
+]
+[diagram]
+kind = "flow"
+items = ["Edit files", "git commit", "History graph", "git push → shared"]
+caption = "Each commit is a snapshot linked to the one before it; the chain is the project's history."

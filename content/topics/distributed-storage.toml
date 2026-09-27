@@ -1,0 +1,16 @@
+name = "Distributed storage"
+tagline = "Keeping data across many machines so that no single one holds, or can lose, the whole."
+pro = [
+  "Distributed storage spreads data across nodes so that it survives the failure of any one and scales beyond one disk. Designs differ in how data is addressed (by key in object stores like S3 and Ceph; by content hash in IPFS), how it is replicated or erasure-coded, how consistency is kept across replicas, and — in open networks — what makes strangers keep storing it (Filecoin's storage deals, Storj's payments, or a project's own incentive design).",
+  "**How it works.** A file is chunked; chunks are placed on several nodes according to a placement rule (a hash ring, a DHT, a metadata service); reads fetch from any holder and, with content addressing, verify what they got. The replication factor sets durability against node loss; erasure coding gets the same durability with less raw space. Consistency models range from strong (everyone sees the latest write) to eventual (they will, eventually), and the choice shapes the application.",
+  "**Trade-offs.** Durability and scale versus coordination overhead and complexity; open networks add the incentive problem — data lives only while someone is motivated to keep it. For a blockchain, the pattern is to keep large data off-chain in distributed storage and record only the content hash on-chain.",
+  "**Here.** The multi-consensus deployment system used IPFS as its distributed storage layer and turned the storage itself into the reward: under a constraint that ruled out a conventional token, participants earned allocated IPFS storage space for contributing to the network — the incentive and the storage were the same resource.",
+]
+noob = [
+  "Instead of one computer holding a file, pieces of it are copied onto many computers. If one breaks, the others still have it — and nobody has to trust a single machine with everything.",
+  "The tricky part in an open network is *why* strangers would keep storing your data. Usually they're paid. In the project on this site, the storage space itself was the payment: help run the network, earn space to store your own files.",
+]
+[diagram]
+kind = "hub"
+items = ["File (by hash)", "Copy on node 1", "Copy on node 2", "Copy on node 3"]
+caption = "Lose a node, keep the file."

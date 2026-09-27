@@ -1,0 +1,17 @@
+name = "VPN"
+tagline = "A private, encrypted tunnel across a public network."
+pro = [
+  "A VPN (virtual private network) encapsulates traffic in an encrypted tunnel between two endpoints, so that machines on different networks behave as if on one private network while any observer in between sees only ciphertext to a single address. Modern implementations (WireGuard and its descendants, Tailscale, IPsec) identify peers cryptographically; the tunnel gets its own address range, and services can bind to those addresses only.",
+  "**Two very different uses.** *Consumer* VPNs route all your traffic through a provider's exit to hide it from the local network or change apparent location — you are trusting the provider instead. *Private-access* VPNs are the opposite: a tunnel to your own infrastructure, so services never need to be exposed to the internet at all. The second is what a home lab uses; the firewall drops everything that does not arrive through the tunnel.",
+  "**Trade-offs and design points.** A VPN moves the trust boundary; it does not remove it — a compromised device on the tunnel is inside. Per-device keys, revocation, and per-person per-service access rules on the server side keep that bounded. Fixed protocol signatures can be blocked on hostile networks, hence obfuscated variants; and a rescue path should be a separate, narrower tunnel so fixing the server never means widening access to it.",
+  "**Here.** The lab's rule is that every service is reached through a tunnel or SSH and nothing is offered in plaintext to the LAN. WireGuard is the main tunnel, AmneziaWG the obfuscated fallback, a separate rescue tunnel permits administration only, and access per person per service is derived from one table and enforced by the firewall.",
+]
+noob = [
+  "Imagine sending letters through a see-through tube that everyone can look into. A VPN puts each letter in a locked box first, and only the person at the other end has the key.",
+  "There are two kinds: the ones advertised on YouTube route *all* your internet through a company (you're trusting them instead), and the private kind — a tunnel to your own server, so the server never has to be open to the internet at all.",
+  "The server on this site uses the private kind: the only way in is through the tunnel, and every device has its own key that can be cancelled on its own.",
+]
+[diagram]
+kind = "flow"
+items = ["Laptop anywhere", "Encrypted tunnel", "Server", "Private services"]
+caption = "From outside, only the tunnel endpoint exists."

@@ -1,0 +1,115 @@
+/* Minimap module "spider": a spider descends its silk as the reader scrolls.
+   Palette variables only; self-contained; see src/minimaps/README.md. */
+/* ── side rail: a spider descends its silk as you read ─────────────────── */
+.rail{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);z-index:90;display:flex;gap:.6rem;align-items:stretch;opacity:0;transition:opacity .4s;height:min(46vh,380px)}
+.js .rail{opacity:1}
+.rail-track{width:50px;position:relative}
+.rail-track::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;background:repeating-linear-gradient(180deg,rgba(255,255,255,.14) 0 4px,transparent 4px 8px)}
+.rail-silk{position:absolute;left:50%;top:0;width:1px;height:100%;transform:scaleY(0);transform-origin:top;background:linear-gradient(180deg,var(--primary),var(--secondary));box-shadow:0 0 6px rgba(var(--accent-rgb),.6)}
+.rail-spider{position:absolute;left:50%;top:0;width:50px;height:50px;margin-left:-25px;margin-top:-25px;pointer-events:auto;cursor:pointer;filter:drop-shadow(0 0 4px rgba(var(--accent-rgb),.6));animation:spiderGlitch 5s steps(1) infinite 2s}
+.spider{width:100%;height:100%;overflow:visible;transform:rotate(180deg);transform-origin:50% 50%}
+/* moods (classes set by behavior.js): climbing turns it head-up; a startle spreads the legs and
+   widens the eyes; idle makes it breathe and blink; the eyes follow the pointer a little */
+.spider .eye{transform:translate(calc(var(--ex,0) * 1px),calc(var(--ey,0) * 1px));transition:transform .2s,r .2s}
+.rail-spider:hover .spider .eye,.rail.startled .spider .eye{r:1.4;fill:var(--warning)}
+.rail-spider:hover .spider .legs-l,.rail.startled .spider .legs-l{animation:legL .18s ease-in-out infinite;transform-origin:16px 20px}
+.rail-spider:hover .spider .legs-r,.rail.startled .spider .legs-r{animation:legR .18s ease-in-out infinite;transform-origin:24px 20px}
+.rail-spider:hover .spider .body,.rail.startled .spider .body{stroke:var(--warning)}
+.rail.idle .spider .body{animation:breathe 3.2s ease-in-out infinite}
+.rail.idle .spider .eye{animation:blink 4.5s steps(1) infinite}
+.rail.idle .spider .legs-l,.rail.idle .spider .legs-r{animation-duration:2.6s}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.06,1.04)}}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}94%,97%{transform:scaleY(.1)}}
+.spider .body{transform-origin:20px 22px}
+.spider .eye{transform-box:fill-box;transform-origin:center}
+.spider .tag{font:700 5.6px var(--mono,ui-monospace,monospace);fill:var(--map-tag,var(--secondary));letter-spacing:.14px;opacity:.92;
+  paint-order:stroke;stroke:var(--panel);stroke-width:1.1;stroke-linejoin:round;
+  filter:drop-shadow(0 0 1.3px rgba(var(--map-tag-rgb,var(--secondary-rgb)),.9));
+  transform-box:fill-box;transform-origin:center;transform:rotate(calc(-1 * var(--turn,180deg)))}
+.spider .body{fill:var(--panel);stroke:var(--primary);stroke-width:1.4}
+.spider .head{fill:var(--panel);stroke:var(--secondary);stroke-width:1.4}
+.spider .eye{fill:var(--primary)}
+/* legs reach 35 units across instead of the drawing's 38, so the body sits
+   larger against them; scaled about the body's centre */
+.spider .leg-scale{transform-box:view-box;transform-origin:20px 22px;transform:scale(.921)}
+.spider .legs path{fill:none;stroke:var(--secondary);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.spider .legs-l{transform-origin:16px 20px;animation:legL 1.1s ease-in-out infinite}
+.spider .legs-r{transform-origin:24px 20px;animation:legR 1.1s ease-in-out infinite}
+@keyframes legL{0%,100%{transform:rotate(0)}50%{transform:rotate(-7deg)}}
+@keyframes legR{0%,100%{transform:rotate(0)}50%{transform:rotate(7deg)}}
+@keyframes spiderGlitch{0%,94%{filter:drop-shadow(0 0 4px rgba(var(--accent-rgb),.6))}
+  95%{filter:drop-shadow(-3px 0 var(--warning)) drop-shadow(3px 0 var(--primary))}
+  97%{filter:drop-shadow(3px 0 var(--danger)) drop-shadow(-3px 0 var(--primary))}
+  98.5%{filter:drop-shadow(0 0 4px rgba(var(--accent-rgb),.6))}}
+.rail.moving .rail-spider,.rail.turning .rail-spider,.rail.gripping .rail-spider{animation:none}
+.rail.moving .spider .legs-l,.rail.moving .spider .legs-r{animation-duration:.35s}
+/* stops sit at each section's real position on the page (the script sets --at); the
+   spider reaches a diamond exactly when the reader reaches that section */
+.rail-stops{list-style:none;position:relative;width:18px;padding:0;margin:0}
+.rail-stops li{position:absolute;left:0;top:calc(var(--at,0) * 1%);transform:translateY(-50%)}
+/* the path: small dots between the diamonds (the script places them), grey until the
+   spider has passed, then a soft dark yellow — they mirror how far it has come */
+.rail-path{position:absolute;inset:0;pointer-events:none}
+.rail-path i{position:absolute;left:50%;top:calc(var(--at,0) * 1%);width:3px;height:3px;margin:-1.5px 0 0 -1.5px;border-radius:50%;background:var(--faint);opacity:.55;transition:background .3s,opacity .3s,box-shadow .3s}
+.rail-path i.lit{background:color-mix(in srgb,var(--warning) 85%,#000);opacity:1;box-shadow:0 0 6px rgba(var(--warning-rgb),.55)}
+.rail-stops a{position:relative;display:flex;align-items:center;justify-content:center;width:18px;height:18px}
+/* the generated stops carry an index and a tooltip; this design shows neither, and skips the "top" stop */
+.rail-stops .map-index,.rail-stops .map-tooltip{display:none}
+.rail-stops li:first-child{display:none}
+.rail-dot,.map-node{width:7px;height:7px;background:var(--faint);transform:rotate(45deg);transition:background .25s,box-shadow .25s,transform .25s;display:block}
+.rail-stops a[data-passed] .map-node{background:color-mix(in srgb,var(--success) 80%,#000);box-shadow:0 0 6px rgba(var(--success-rgb),.35)}
+.rail-stops a:hover .map-node,.rail-stops a[data-on] .map-node{background:var(--primary);box-shadow:0 0 10px rgba(var(--accent-rgb),.8);transform:rotate(45deg) scale(1.4)}
+/* ── climbing and turning ────────────────────────────────────────────── */
+/* behavior.js places alternating front feet on the silk and folds the rear
+   legs beside the abdomen. Group rotation/scaling would detach those feet and collapse the legs.
+   The same distance-driven gait serves scrolling and the idle climb home. */
+.rig{transform-box:fill-box;transform-origin:center}
+.spider .legs path{transform-box:fill-box}
+.spider .legs-l path{transform-origin:right center}
+.spider .legs-r path{transform-origin:left center}
+.rail.gripping .spider .legs-l,.rail.gripping .spider .legs-r,
+.rail.gripping .spider .legs path,.rail.gripping .rig{animation:none}
+/* Promote only while travelling; settled spiders need no animation frame. */
+.rail.moving .rail-spider,.rail.turning .rail-spider{will-change:transform}
+.rail.turning .spider{will-change:transform}
+
+/* ── idle life: the longer it is left alone, the more it finds to do ────── */
+/* grooming — a front leg folds up over the head (rotate toward the head, scale
+   shortens it about the shoulder so it reads as pulling in), one side then the
+   other, while the head rocks into it */
+.rail.groom .spider .legs-l path:nth-child(1){animation:groomL 1.3s ease-in-out infinite}
+.rail.groom .spider .legs-r path:nth-child(1){animation:groomR 1.3s ease-in-out infinite .65s}
+.rail.groom .spider .head{animation:lean 1.3s ease-in-out infinite}
+.rail.groom .spider .eye{animation:squint 1.3s ease-in-out infinite}
+@keyframes groomL{0%,60%,100%{transform:none}25%{transform:rotate(40deg) scale(.84)}}
+@keyframes groomR{0%,60%,100%{transform:none}25%{transform:rotate(-40deg) scale(.84)}}
+@keyframes lean{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+.spider .head{transform-box:fill-box;transform-origin:center}
+/* eating — both front legs held in at the mouth, working in small pulls, the
+   head chewing against them and the eyes half shut */
+.rail.eat .spider .legs-l path:nth-child(1){animation:eatL .54s ease-in-out infinite}
+.rail.eat .spider .legs-r path:nth-child(1){animation:eatR .54s ease-in-out infinite}
+.rail.eat .spider .legs-l path:nth-child(2){animation:eatL .54s ease-in-out infinite .27s}
+.rail.eat .spider .legs-r path:nth-child(2){animation:eatR .54s ease-in-out infinite .27s}
+.rail.eat .spider .head{animation:chew .54s ease-in-out infinite}
+.rail.eat .spider .eye{animation:squint 2.2s ease-in-out infinite}
+@keyframes eatL{0%,100%{transform:rotate(24deg) scale(.9)}50%{transform:rotate(34deg) scale(.82)}}
+@keyframes eatR{0%,100%{transform:rotate(-24deg) scale(.9)}50%{transform:rotate(-34deg) scale(.82)}}
+@keyframes chew{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-.6px) scale(1.05)}}
+@keyframes squint{0%,100%{transform:scaleY(1)}35%,65%{transform:scaleY(.45)}}
+/* plucking — it tests the thread, and the silk shivers with it */
+.rail.pluck .rail-spider{animation:pluck .46s ease-in-out 4}
+.rail.pluck .rail-silk{animation:shiver .46s ease-in-out 4}
+@keyframes pluck{0%,100%{margin-top:-19px}50%{margin-top:-21px}}
+@keyframes shiver{0%,100%{box-shadow:0 0 6px rgba(var(--accent-rgb),.6)}50%{box-shadow:0 0 13px rgba(var(--accent-rgb),.95)}}
+/* dozing — the eyes shut and it sways on its thread */
+.rail.doze .spider .eye{animation:none;transform:scaleY(.12)}
+.rail.doze .rig{animation:sway 7s ease-in-out infinite}
+.rail.doze .spider .legs-l,.rail.doze .spider .legs-r{animation-duration:6s}
+@keyframes sway{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+
+@media(max-width:1180px){.rail{display:none}}
+
+@media(prefers-reduced-motion:reduce){.rail-spider,.spider .legs-l,.spider .legs-r,.spider .legs path,
+  .rig,.spider .head,.spider .eye,.rail-silk{animation:none!important}.spider,.rail-silk{transition:none}}
+@media print{.rail{display:none!important}}

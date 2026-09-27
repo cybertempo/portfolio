@@ -1,0 +1,17 @@
+name = "Automation"
+tagline = "Making a computer do a repeated job reliably, so a person doesn't have to remember to."
+pro = [
+  "Automation turns procedures into programs: scripts that do a whole job and check that they did it, schedulers that run them on time, pipelines that build, test, publish and prove. Its value is not only saved time but removed variance — a script does step four every time, a person sometimes does not. The lab's rule states it directly: anything done more than once gets a named script that does the whole job and proves it did.",
+  "**Doing it well.** One command per task; every command says where it runs; a failed step fails the whole pipeline rather than reporting success; verification built in (the backup restores a sample, the deploy reads the live site back); no secrets in scripts or logs; idempotence, so running it twice is safe; and honest output — what it did, what it found, what it refused. Scheduled automation needs a dead-man's switch: silence must be the alarm, because a dead machine cannot report its own death.",
+  "**Trade-offs.** Automation encodes assumptions; when the world changes, an automated job fails silently or does the wrong thing confidently. Drift checks — comparing what the documents say to what the system is — and alerts on absence are the antidote. Automating a bad process makes it bad faster; the process is designed first.",
+  "**Here.** CommitBot's reminder engine is automation in the product; the lab's tooling is automation around the products: one-command device enrolment and revocation, scheduled backups with verified restores, drift checks, and this site's own build → gate → deploy → verify pipeline, which refuses to publish anything it cannot prove.",
+]
+noob = [
+  "If you have to do the same thing every day, write it down as a program and let the computer do it — every time, the same way, without forgetting. That's automation.",
+  "The good kind also checks its own work and shouts if something's wrong. And it's built so that silence is an alarm: if the daily job doesn't report in, someone gets told, because a broken computer can't tell you it's broken.",
+  "CommitBot reminding people about deadlines is automation inside a product; the scripts that build, check and publish this site are automation around one.",
+]
+[diagram]
+kind = "flow"
+items = ["Timer or event", "Script runs", "Checks its own result", "Reports"]
+caption = "Automation that doesn't verify itself is just a faster way to be wrong."

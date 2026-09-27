@@ -1,0 +1,18 @@
+name = "Front end"
+aliases = ["Frontend"]
+tagline = "Everything the user sees and touches: layout, interaction, state in the browser."
+pro = [
+  "The front end is the part of an application that runs on the user's device: rendering the interface, handling input, managing the state the user is working with, and talking to the back end. In the browser that means HTML, CSS and JavaScript, usually organised with a component framework (React, Vue, Svelte) once interaction is non-trivial, plus routing, forms, data fetching and accessibility.",
+  "**The hard problems.** Keeping the UI consistent with state as it changes (the problem frameworks exist to solve); performance on slow devices and networks (bundle size, rendering cost, images); responsiveness across screen sizes; accessibility for keyboard and screen-reader users; and the adversarial runtime — the user controls the browser, so nothing in the front end can be trusted by the back end.",
+  "**Trade-offs.** Frameworks make complex UIs tractable and cost bytes and complexity; for content pages plain HTML and CSS are faster and simpler. Client-side rendering gives app-like interaction and hurts first load and search indexing; server rendering does the reverse; hybrids cost tooling. Testing at the component level with a simulated DOM is fast; testing real user flows needs a real browser.",
+  "**Here.** WebYes Shop (React 18, Router, Context, Vite, 32 tests) and Skywatcher (vanilla ES2022, no framework) are front-end projects at opposite ends of the tooling spectrum; SmartPact's React front end talks to the chain through Web3.js; this site is a hand-built static front end with about 200 lines of JavaScript.",
+]
+noob = [
+  "The front end is the part of an app you can see — buttons, lists, the cart drawer sliding open. Front-end developers make it look right, work on every screen size, and react instantly when you tap.",
+  "The tricky bit is keeping everything on screen in sync when something changes: add an item, and the badge, the drawer and the total all have to agree. Frameworks like React exist to make that automatic.",
+  "The shopping platform and the weather dashboard on this site are front-end projects — one built with React, one with nothing but plain JavaScript, on purpose.",
+]
+[diagram]
+kind = "flow"
+items = ["User action", "State updates", "Components re-render", "Screen"]
+caption = "The screen is a picture of the state."

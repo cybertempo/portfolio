@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Privacy by construction: nothing loads from anywhere but this site, no
+     inline script, no frames, no forms. The build refuses any external
+     script/style/font/image, so this policy never has to be loosened. -->
+<meta http-equiv="Content-Security-Policy" content="{{csp}}">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="{{theme_bg}}">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<meta name="author" content="{{full_name}}">
+{{meta_social}}
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/JetBrainsMono.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/SpaceGrotesk.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/ChakraPetch.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="palette.css">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="minimap.css">
+<link rel="stylesheet" href="photo.css">
+{{json_ld}}
+</head>
+<body>
+
+<canvas id="rain" data-hex="{{rain_hex}}" aria-hidden="true"></canvas>
+<div class="fx-noise" aria-hidden="true"></div>
+<div class="fx-vignette" aria-hidden="true"></div>
+{{ghost}}
+
+<a class="skip" href="#about">Skip to content</a>
+
+{{minimap}}
+
+<nav class="nav" aria-label="Main">
+  <a class="logo" href="#top" aria-label="Back to top"><span class="logo-user">{{handle}}</span><span class="logo-at">@</span><span class="logo-host">{{host}}</span><span class="logo-prompt">:~$</span><span class="logo-cursor" aria-hidden="true">▌</span></a>
+  <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu"><span></span><span></span><span></span></button>
+  <ul class="nav-links" id="nav-links">
+{{nav_links}}
+  </ul>
+  <div class="status-pill" role="status"><span class="dot" aria-hidden="true"></span>{{status}}</div>
+</nav>
+
+<main id="top">
+
+  <header class="hero">
+    <div class="hero-photo" id="heroPhoto" aria-hidden="true">
+      <img class="hero-photo-glow" src="assets/{{photo}}" alt="" decoding="async">
+      <div class="chroma chroma-c"></div>
+      <div class="chroma chroma-m"></div>
+      <img class="hero-photo-dots" src="assets/{{photo}}" alt="" decoding="async">
+      <img class="hero-photo-full" src="assets/{{photo}}" alt="" decoding="async" fetchpriority="high">
+      <div class="decode-bar"></div>
+    </div>
+    <div class="grid-overlay" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <p class="kicker">{{hero_kicker}}</p>
+      <h1 class="glitch" data-text="{{first_upper}} {{last_upper}}">{{first_upper}}<br><em>{{last_upper}}</em></h1>
+      <p class="hero-sub">{{hero_lead}}</p>
+      <p class="typeline"><span class="typeline-prompt" aria-hidden="true">&gt;</span> <span id="typeline" data-phrases="{{typed_json}}">{{typed_first}}</span><span class="caret" aria-hidden="true"></span></p>
+      <div class="hero-cta">
+        <a class="btn" href="#projects">{{cta_primary}}</a>
+        <a class="btn" href="#contact">{{cta_secondary}}</a>
+      </div>
+      <dl class="hero-stats">
+{{hero_stats}}
+      </dl>
+    </div>
+    <a class="scroll-hint" href="#about" aria-hidden="true">▼ {{scroll_hint}}</a>
+  </header>
+
+  <section id="about" class="reveal">
+    <div class="sec-head">
+      <p class="sec-tag">{{about_tag}}</p>
+      <h2 class="sec-title glitch2" data-text="{{about_title_plain}}">{{about_title}}</h2>
+    </div>
+    <div class="about-wrap">
+      <div class="terminal" role="img" aria-label="A terminal transcript introducing {{full_name}}">
+        <div class="term-bar"><i></i><i></i><i></i><span>{{handle}}@{{host}}: ~</span></div>
+        <div class="term-body">
+{{terminal}}
+        </div>
+      </div>
+      <div class="about-card">
+{{about_paragraphs}}
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="reveal">
+    <div class="sec-head">
+      <p class="sec-tag">{{skills_tag}}</p>
+      <h2 class="sec-title glitch2" data-text="{{skills_title_plain}}">{{skills_title}}</h2>
+    </div>
+    <div class="skills-grid">
+{{skills}}
+    </div>
+  </section>
+
+  <section id="projects" class="reveal">
+    <div class="sec-head">
+      <p class="sec-tag">{{projects_tag}}</p>
+      <h2 class="sec-title glitch2" data-text="{{projects_title_plain}}">{{projects_title}}</h2>
+    </div>
+    <div class="proj-grid">
+{{projects}}
+    </div>
+    <details class="more-proj">
+      <summary>{{archive_label}}</summary>
+      <div class="more-list">
+{{archive}}
+      </div>
+    </details>
+  </section>
+
+  <section id="experience" class="reveal">
+    <div class="sec-head">
+      <p class="sec-tag">{{experience_tag}}</p>
+      <h2 class="sec-title glitch2" data-text="{{experience_title_plain}}">{{experience_title}}</h2>
+    </div>
+    <ol class="timeline">
+{{experience}}
+    </ol>
+  </section>
+
+  <section id="achievements" class="reveal">
+    <div class="sec-head">
+      <p class="sec-tag">{{achievements_tag}}</p>
+      <h2 class="sec-title glitch2" data-text="{{achievements_title_plain}}">{{achievements_title}}</h2>
+    </div>
+    <div class="ach-grid">
+{{achievements}}
+    </div>
+  </section>
+
+  <section id="certifications" class="reveal">
+    <div class="sec-head">
+      <p class="sec-tag">{{certifications_tag}}</p>
+      <h2 class="sec-title glitch2" data-text="{{certifications_title_plain}}">{{certifications_title}}</h2>
+    </div>
+    <ul class="cert-list">
+{{certifications}}
+    </ul>
+  </section>
+
+  <section id="contact" class="reveal">
+    <div class="contact-box">
+      <p class="sec-tag">{{contact_tag}}</p>
+      <h2 class="glitch2" data-text="{{contact_title_plain}}">{{contact_title}}</h2>
+      <p class="contact-blurb">{{contact_blurb}}</p>
+      <div class="contact-links">
+        <a class="btn email" href="#contact" data-u="{{email_user_rev}}" data-d="{{email_domain_rev}}">{{email_icon}}{{email_label}}</a>
+{{contact_links}}
+      </div>
+      <noscript><p class="contact-noscript">{{email_noscript}}</p></noscript>
+    </div>
+  </section>
+
+</main>
+
+<footer>{{footer}}</footer>
+
+<script src="app.js" defer></script>
+<script src="minimap.js" defer></script>
+</body>
+</html>

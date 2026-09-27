@@ -1,0 +1,18 @@
+# Carbon + Patina — restrained instrument-panel colours for a technical portfolio.
+# Teal leads; amber is reserved for highlights. All text tones pass 4.5:1
+# against both the page and panel backgrounds (including faint text).
+name      = "Carbon + Patina"
+bg        = "#101414"
+bg2       = "#151b1b"
+panel     = "#1a2222"
+panel2    = "#141a1a"
+text      = "#f1efe7"
+muted     = "#a6b5b1"
+faint     = "#859793"
+stroke    = "#090d0d"
+primary   = "#80d8c3"
+secondary = "#94b9b2"
+tertiary  = "#a8bfd5"
+success   = "#a6cf9b"
+warning   = "#e6bc79"
+danger    = "#ed9a88"

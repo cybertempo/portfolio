@@ -1,0 +1,17 @@
+name = "SQLAlchemy"
+tagline = "Python's database toolkit: talk to SQL databases through Python classes, or write SQL directly."
+pro = [
+  "SQLAlchemy is the standard Python database toolkit, in two layers. **Core** is a SQL expression language and engine: connection pooling, dialects for PostgreSQL, MySQL, SQLite and more, and a way to build SQL as composable Python objects. The **ORM** maps classes to tables — `class User(Base)` with typed columns, relationships between classes, and a **Session** that tracks changes as a unit of work and flushes them as SQL inside a transaction.",
+  "**How it works.** You query with a Python API (`select(User).where(User.email == x)`), the ORM emits SQL, rows come back as objects, and changes to those objects are written on `commit()`. Relationships load lazily or eagerly — the difference between one query and N+1 queries. Alembic, its companion, manages schema migrations as versioned scripts. SQLAlchemy 2.0 unified the query style and made type hints first-class.",
+  "**Trade-offs.** An ORM hides SQL until performance or subtlety demands you see it; the discipline is to read the generated SQL (`echo=True`) when something is slow, and to reach for Core when the ORM fights you. Sessions have lifecycle rules (one per request in web apps) that cause confusing bugs when broken. The payoff is portability across databases and code that expresses the data model once.",
+  "**Here.** CommitBot models its nine tables with the ORM — users, commitments, reminders, reassignments, audit entries and more — with relationships that keep the audit trail attached to the commitment it describes, and a session per request under FastAPI's dependency injection.",
+]
+noob = [
+  "Databases speak SQL; Python speaks Python. SQLAlchemy is the translator: you work with normal Python objects (a User, a Commitment) and it writes the SQL to save and load them.",
+  "It also keeps track of what you changed and saves it all together, so a half-finished change never ends up in the database.",
+  "You can still write SQL by hand when you want to — it doesn't hide the database, it just saves you the boring parts. CommitBot's nine tables are all described this way.",
+]
+[diagram]
+kind = "flow"
+items = ["Python class", "SQLAlchemy ORM", "SQL statement", "Database table"]
+caption = "Objects in, SQL out — and rows back as objects."

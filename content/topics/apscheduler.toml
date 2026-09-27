@@ -1,0 +1,17 @@
+name = "APScheduler"
+tagline = "A Python library for running jobs on a schedule — cron-style, at intervals, or at a set time."
+pro = [
+  "APScheduler (Advanced Python Scheduler) runs Python callables on triggers — `cron` (calendar expressions), `interval` (every N seconds/minutes), `date` (once, at a time) — from inside a Python process. Schedulers come in blocking, background and async flavours to match the host application; job stores can be in memory or a database so schedules survive restarts; executors run jobs in threads or processes.",
+  "**How it works.** You add a job (function, trigger, id); the scheduler sleeps until the next due time, wakes, dispatches the job to an executor, and reschedules. Misfire handling decides what happens if the process was down when a job was due (run once now, coalesce, or skip). With a persistent job store, several app instances can share a schedule; without one, every restart starts from the code's definitions.",
+  "**Trade-offs.** It is in-process: if the app is down, nothing runs, and scaling to many instances needs care to avoid duplicate execution. For a single service it is far simpler than an external scheduler (cron, Celery beat) and keeps the timing logic next to the code it drives. Long-running jobs should not block the event loop of an async app — use the right executor.",
+  "**Here.** CommitBot's reminder engine is seven APScheduler jobs: sweeping upcoming deadlines, escalating the ping cadence as a due date approaches, expiring stale reassignment requests, and housekeeping — running inside the FastAPI process so the bot, dashboard and timers deploy as one unit.",
+]
+noob = [
+  "Some things have to happen on a timer: every morning, every ten minutes, or next Tuesday at 3. APScheduler is an alarm clock for code — you tell it when, and it runs your function then.",
+  "It lives inside your program, so the program has to be running for the alarms to go off — but that also means the timing rules sit right next to the code they trigger.",
+  "CommitBot uses it to remind people about promises, more and more often as the deadline gets close.",
+]
+[diagram]
+kind = "flow"
+items = ["Schedule: every 10 min", "APScheduler", "check_deadlines()", "Send reminders"]
+caption = "Timer fires, function runs, and the process keeps going."

@@ -1,0 +1,17 @@
+name = "MongoDB"
+tagline = "A document database: records are flexible JSON-like documents instead of fixed rows and columns."
+pro = [
+  "MongoDB stores **documents** — BSON, a binary JSON with extra types — in **collections**. A document can nest objects and arrays, and two documents in the same collection need not share a shape, so data that is naturally hierarchical or evolving fits without joins or migrations. It offers indexes (including compound, text and geospatial), an aggregation pipeline for analytics-style queries, replica sets for availability and sharding for horizontal scale.",
+  "**How it works.** Reads and writes address documents by `_id` or by query on fields; embedded data is returned in one round trip. Schema flexibility is real but not free: the application, not the database, must enforce consistency, and MongoDB's optional schema validation is worth using. Multi-document ACID transactions exist since 4.0 but are not the default way of thinking; the idiom is to model data so that one document is the unit of consistency.",
+  "**Trade-offs.** Excellent for content, catalogues, event data and prototypes where the shape is still changing; weaker where data is highly relational and integrity constraints matter (a bank ledger wants a relational database). Unbounded array growth and deeply nested documents are the classic modelling mistakes. Like Redis, an unauthenticated MongoDB exposed to the internet is a well-known breach pattern — bind to localhost and require credentials.",
+  "**Here.** MongoDB is the durable store for SmartPact (agreements, users, dispute records) and the multi-consensus deployment platform (network definitions and node state), where the documents are naturally nested and the schema evolved with the prototype.",
+]
+noob = [
+  "A spreadsheet database makes every record fit the same columns. MongoDB stores each record as a **document** — like a form where different records can have different fields, and a field can contain a list or another whole form.",
+  "That's handy when the data doesn't fit neat rows: a user with any number of addresses, an agreement with its own list of clauses. You read the whole thing in one go instead of stitching it together from several tables.",
+  "The trade is that the database won't stop you from storing something inconsistent — your program has to be careful instead. Two of the projects on this site keep their records this way.",
+]
+[diagram]
+kind = "stack"
+items = ["Database", "Collection: users", "Document {name, addresses}"]
+caption = "Documents nest naturally; no joins needed for data that belongs together."

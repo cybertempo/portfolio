@@ -1,0 +1,18 @@
+name = "Node.js"
+aliases = ["Node"]
+tagline = "JavaScript outside the browser — the runtime that lets you write servers and tools in JS."
+pro = [
+  "Node.js embeds Google's V8 engine in a standalone runtime with a standard library for files, networking, processes and streams, so JavaScript can run servers, command-line tools and build systems. Its defining design is non-blocking I/O on a single-threaded event loop: instead of one thread per connection, one loop hands off every I/O operation to the system and picks up the result when it is ready. npm, its package manager, is the largest software registry in existence.",
+  "**How it works.** Every network read, file read or timer is asynchronous; your code registers what to do when it completes. This makes Node exceptionally good at many simultaneous, mostly-waiting connections — APIs, chat servers, proxies — using little memory. CPU-heavy work, by contrast, blocks the loop for everyone; it goes to worker threads or a separate service.",
+  "**Trade-offs.** One language front to back is a real productivity win, and the ecosystem has a package for everything — which is also its risk: dependency sprawl and supply-chain attacks through npm are a recurring security story, so lockfiles, audits and minimal dependencies matter. Error handling in asynchronous code takes discipline (`async`/`await` with proper `try`/`catch`).",
+  "**Here.** Node is the runtime for the vulnerability scanner (Express, simple-git), SmartPact's back end and the multi-consensus deployment platform (Express, Redis, MongoDB, IPFS). It is also what runs this site's deploy tooling.",
+]
+noob = [
+  "JavaScript used to live only inside web browsers. Node.js took the engine out of the browser so you can run JavaScript on any computer — including servers, the computers that send web pages and data to everyone else.",
+  "Node is good at juggling. While it waits for one slow thing (a file, a database, another website), it doesn't stand still — it moves on to the next person's request and comes back when the slow thing is ready. One Node program can talk to thousands of people at once this way.",
+  "Because the front of a website (in the browser) and the back (on the server) can now be the same language, one person can build the whole thing. That's a big part of why it's everywhere.",
+]
+[diagram]
+kind = "hub"
+items = ["Node.js event loop", "Browser request", "Database", "File system", "Another API"]
+caption = "One loop hands out work and picks up the answers as they come back — nothing waits in line."

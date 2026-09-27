@@ -1,0 +1,17 @@
+name = "Electron"
+tagline = "Build desktop apps for Windows, macOS and Linux using web technologies."
+pro = [
+  "Electron bundles Chromium (the browser engine) and Node.js into one runtime so that an application written in HTML, CSS and JavaScript runs as a native desktop program with its own window, menus, tray icon, file-system access and OS integration. VS Code, Slack, Discord and Figma's desktop app are Electron. One codebase ships to three operating systems.",
+  "**How it works.** A **main** process (Node) owns the application lifecycle and creates windows; each window is a **renderer** process running the web UI in Chromium. The two talk over IPC. Security depends on keeping them separate: context isolation on, Node integration off in renderers, and a small **preload** script exposing exactly the privileged functions the UI needs — otherwise any injected script has the user's whole machine.",
+  "**Trade-offs.** Every Electron app ships its own browser: 100+ MB installs and several hundred megabytes of memory per app, which is the standing criticism. Start-up is slower than a native app. In exchange: the full web ecosystem, one team for all platforms, and a UI that can be as rich as any website. Tauri is the lighter alternative (system webview, Rust back end) when size matters.",
+  "**Here.** The multi-level permissioned blockchain desktop app is Electron + React talking to a local FastAPI blockchain node over HTTP — the desktop shell gives it a real window, local storage and cross-platform installers while the chain logic stays in Python.",
+]
+noob = [
+  "Electron lets you take a web page and turn it into a real app you install on your computer, with its own window and icon. VS Code, Discord and Slack's desktop apps are built this way.",
+  "Underneath, it's a mini web browser plus the power to read files and talk to the computer, wrapped up as one program. The downside is that every such app carries its own browser inside, so they're big and use a lot of memory.",
+  "The blockchain app on this site is an Electron app: the window and buttons are a web page, and the blockchain itself runs beside it on your computer.",
+]
+[diagram]
+kind = "stack"
+items = ["Your web UI (React)", "Electron (Chromium+Node)", "Windows / macOS / Linux"]
+caption = "Web code on top, a bundled browser in the middle, any desktop OS below."

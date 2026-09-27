@@ -1,0 +1,18 @@
+name = "zkSync Era"
+aliases = ["zkSync"]
+tagline = "An Ethereum Layer 2 that batches transactions and proves them with zero-knowledge proofs — cheaper and faster, same security."
+pro = [
+  "zkSync Era is a **ZK rollup**: it executes transactions on its own chain, compresses thousands of them into a batch, generates a validity proof (a zero-knowledge proof that every state transition was correct), and posts the proof plus compressed data to Ethereum. Ethereum verifies the proof, not the transactions, so users get far lower fees and faster confirmation while inheriting Ethereum's security for finality.",
+  "**How it works.** Era's zkEVM executes Solidity contracts with few changes (the compiler is different — zksolc — and some opcodes behave differently, which matters for gas estimation and certain patterns). Withdrawals to Layer 1 wait for the proof to be verified. Unlike optimistic rollups, there is no week-long fraud-proof window, because validity is proven up front.",
+  "**Trade-offs.** Proof generation is computationally heavy and centralised at the sequencer/prover today; the ecosystem and tooling are younger than mainnet's; bridging adds a step for users. For an application whose users would otherwise pay mainnet gas for small agreements, the fee reduction is the difference between viable and not.",
+  "**Here.** SmartPact deployed its Solidity contracts on zkSync Era so that creating an agreement, releasing a payment or opening a dispute costs cents rather than dollars.",
+]
+noob = [
+  "Ethereum is secure but slow and expensive when busy. zkSync handles lots of transactions on the side, then hands Ethereum a mathematical proof that they were all valid — like showing a checked receipt instead of every single item.",
+  "Ethereum only has to check the proof, which is fast, so everyone's transactions get much cheaper without giving up Ethereum's safety.",
+  "SmartPact runs on it so that a small agreement doesn't cost more in fees than the thing being agreed.",
+]
+[diagram]
+kind = "flow"
+items = ["Many transactions", "zkSync batches them", "ZK proof", "Ethereum verifies"]
+caption = "Thousands of transactions, one proof on the main chain."

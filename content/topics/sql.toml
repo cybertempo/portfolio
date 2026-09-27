@@ -1,0 +1,17 @@
+name = "SQL"
+tagline = "The standard language for asking questions of relational databases."
+pro = [
+  "SQL (Structured Query Language) is the declarative language of relational databases — PostgreSQL, MySQL, SQLite, SQL Server, Oracle. Data lives in tables with typed columns; relationships are expressed with keys; a query states *what* rows you want (`SELECT … FROM … JOIN … WHERE … GROUP BY`) and the database's query planner decides *how* to fetch them, using indexes and statistics.",
+  "**How it works.** The schema enforces structure: primary keys, foreign keys, `NOT NULL`, `UNIQUE`, `CHECK` constraints. Transactions (`BEGIN … COMMIT`) make a group of changes atomic and isolated, so concurrent users never see half-finished work — the ACID guarantees that make relational databases the default for anything involving money or state that must be right. Indexes turn a full-table scan into a lookup; `EXPLAIN` shows the plan the database chose.",
+  "**Trade-offs and pitfalls.** SQL injection — building queries by string concatenation with user input — remains one of the OWASP Top 10; parameterised queries make it impossible. ORMs (SQLAlchemy, Prisma) write SQL for you and are excellent until a query is slow, at which point you read the SQL they generated. Rigid schemas are a feature for consistency and a cost when data is genuinely irregular (where document stores like MongoDB fit).",
+  "**Here.** SQL underlies CommitBot's nine tables (through SQLAlchemy) and is the model for thinking about data in every project: what is a row, what identifies it, what must never be duplicated. The certainty of a constraint the database enforces is worth more than any check in application code.",
+]
+noob = [
+  "A database is like a giant spreadsheet with many sheets that link to each other — customers on one, orders on another, with a customer number joining them. SQL is how you ask it questions: \"show me every order from last week, with the customer's name\".",
+  "You say **what** you want, not **how** to find it — the database works out the fastest way itself. It can also promise that a change happens completely or not at all (money leaves one account and arrives in another — never just one half).",
+  "Nearly every app you use has SQL underneath: your bank, your shopping cart, your school's records. Learning it means learning how the world's data is actually kept.",
+]
+[diagram]
+kind = "flow"
+items = ["SELECT … WHERE …", "Query planner", "Tables + indexes", "Rows back"]
+caption = "You describe the result; the engine chooses the path."

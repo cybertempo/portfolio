@@ -1,0 +1,18 @@
+name = "Open-Meteo API"
+aliases = ["Open-Meteo"]
+tagline = "A free, open-data weather API: forecasts and geocoding with no API key required."
+pro = [
+  "Open-Meteo is an open-source weather API that serves forecasts, historical data, air quality and geocoding from national weather models (ECMWF, NOAA GFS, DWD ICON and others) over plain HTTPS. It needs no registration or API key for non-commercial use, returns JSON, and lets you choose exactly which variables (temperature, precipitation probability, wind, UV) and resolution you want, which keeps responses small.",
+  "**How it is used.** Two calls cover most apps: the geocoding endpoint turns a place name into coordinates, and the forecast endpoint takes latitude/longitude plus a list of variables and returns hourly or daily series. Because there is no key, there is nothing to leak in a client-side app — the browser can call it directly. Rate limits are generous but exist; caching responses for a few minutes is polite and makes the app feel instant.",
+  "**Trade-offs.** No key means no per-user quota, so a public app is subject to the shared fair-use limit; commercial use needs a paid plan. Data quality varies by region with the underlying model. Any third-party API can change or go down, so a robust client handles errors visibly and keeps the last good data.",
+  "**Here.** Skywatcher uses the geocoding endpoint for its debounced live search and the forecast endpoint for up to eight cities, refreshed concurrently every ten minutes with `Promise.allSettled` so one failed city never blanks the others — with retryable error cards for the ones that failed.",
+]
+noob = [
+  "Weather services publish their forecasts as data that programs can read. Open-Meteo makes that data available to anyone for free — you send a city's coordinates and get the forecast back as numbers, no sign-up needed.",
+  "An app does two things with it: first \"where is Ajman?\" (the geocoding call gives coordinates), then \"what's the weather there?\" (the forecast call).",
+  "Skywatcher on this site asks it about eight cities at once, and if one answer fails, the other seven still show — that's the fault-tolerant part.",
+]
+[diagram]
+kind = "flow"
+items = ["City name", "Geocoding API → lat/lon", "Forecast API", "Dashboard card"]
+caption = "Two requests: find the place, then fetch its weather."

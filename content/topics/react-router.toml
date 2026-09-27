@@ -1,0 +1,18 @@
+name = "React Router"
+aliases = ["React Router v6"]
+tagline = "Client-side routing for React: different URLs show different components without a page reload."
+pro = [
+  "React Router maps URL paths to component trees inside a single-page application. Navigating changes the URL (via the History API) and swaps the rendered components without a full page load, while keeping the browser's back and forward buttons, bookmarks and shareable links working. Version 6 introduced nested route objects, `useParams`/`useSearchParams`, layout routes, and in 6.4 a data API — loaders and actions that fetch and mutate before a route renders.",
+  "**How it works.** A route table declares `path → element`; `<Outlet>` renders the matched child inside a parent layout; `<Link>` and `useNavigate` change the location; dynamic segments (`/products/:id`) become params. Putting UI state in the URL — search terms, filters, page — is the key discipline: it makes state shareable and survivable across reloads.",
+  "**Trade-offs.** Client-side routing needs the server to return `index.html` for every path (an SPA rewrite), or deep links 404. Initial load carries the whole app; frameworks like Next.js or Remix (Router's sibling) render on the server to fix that. For a site of static pages, ordinary links are simpler and faster than any router.",
+  "**Here.** WebYes Shop uses React Router v6 for product, category and cart pages, and keeps search and filter state in the URL query string so a filtered view is a link you can send — deployed on Vercel with the SPA rewrite that makes deep links work.",
+]
+noob = [
+  "In a single-page app the browser never really loads a new page — it swaps what's on screen. React Router makes the address bar still behave: `/cart` shows the cart, `/products/42` shows product 42, and the Back button goes back.",
+  "It also lets the app keep things like your search and filters *in* the address, so if you copy the link and send it to a friend, they see the same filtered page.",
+  "The shopping platform on this site uses it for all its pages.",
+]
+[diagram]
+kind = "flow"
+items = ["URL changes", "Router matches route", "Component shown", "No reload"]
+caption = "The address changes, the page swaps, the browser never leaves."

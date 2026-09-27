@@ -1,0 +1,16 @@
+name = "simple-git"
+tagline = "A Node.js wrapper around the git command line, for cloning and inspecting repositories from code."
+pro = [
+  "simple-git is a lightweight Node.js library that runs the `git` binary and exposes its operations — clone, fetch, log, diff, status, checkout, branch — as a promise-based API with parsed results. It is the practical way for a Node service to work with repositories without reimplementing git: the real tool does the work, the library handles arguments, output parsing and errors.",
+  "**How it is used, and the security shape of it.** A service that clones user-supplied repositories is executing a network fetch on behalf of a stranger: validate the URL (scheme, host allow-list), clone into an isolated per-request directory with a size and time limit, never run hooks or submodule recursion from untrusted repositories, and delete the working copy afterwards. simple-git makes the git calls easy; the isolation is the application's job.",
+  "**Trade-offs.** It requires git installed on the host and inherits git's behaviour, which is a feature (fidelity) and a dependency. For read-only inspection of huge repositories a shallow clone (`--depth 1`) is the difference between seconds and minutes.",
+  "**Here.** The vulnerability scanner uses simple-git to fetch public GitHub repositories (and adm-zip for uploaded archives) into an isolated per-user session directory before analysis, so each scan works on its own copy and leaves nothing behind.",
+]
+noob = [
+  "The scanner needs to download a project from GitHub before it can check it. simple-git is the tool that does the downloading from inside the program, instead of a person typing the commands.",
+  "Because it's fetching code from strangers, it does so in a sealed-off folder that's thrown away afterwards — the same care you'd take opening a package from someone you don't know.",
+]
+[diagram]
+kind = "flow"
+items = ["GitHub URL", "simple-git clone", "Isolated folder", "Scanner reads files"]
+caption = "Fetch into a sandbox, then analyse."

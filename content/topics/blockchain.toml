@@ -1,0 +1,18 @@
+name = "Blockchain"
+aliases = ["Blockchain & decentralised systems"]
+tagline = "A shared ledger that many computers keep identical copies of, where agreement replaces a central authority."
+pro = [
+  "A blockchain is an append-only ledger replicated across many nodes. Transactions are grouped into blocks; each block contains the cryptographic hash of the previous one, so altering any past block changes every hash after it and is immediately detectable. Participants agree on the next block through a **consensus protocol**, so no single party controls history — that is the property everything else is built on.",
+  "**The building blocks.** Digital signatures (ECDSA, Ed25519) prove who authorised a transaction; hash functions (SHA-256, Keccak) link blocks and fingerprint content; Merkle trees let a light client verify that a transaction is in a block without downloading the block. Consensus varies by trust model: proof of work (Bitcoin) spends energy to make rewriting history expensive; proof of stake (Ethereum) bonds capital instead; PBFT, Raft and Tendermint suit **permissioned** chains where members are known and Byzantine or crash faults are the concern.",
+  "**Trade-offs.** Decentralised agreement is slow and expensive compared with a database: Bitcoin does a handful of transactions per second, and every node stores everything. Public chains are transparent by design, which is a privacy problem. Smart-contract bugs are permanent. The honest engineering question is always whether the trust problem is real — if one party can be trusted to run a database, a blockchain is the wrong tool.",
+  "**Here.** Two projects built the machinery from primitives rather than a framework: the permissioned desktop app implements ECDSA signing, Merkle trees, a pluggable consensus engine (PBFT, Raft, Tendermint, PoS, DPoS, PoA) and protocol-level RBAC; the NIT Calicut deployment platform spins up custom networks with PoW, PoS or PoB and replaced tokens with IPFS storage as the incentive. SmartPact puts Solidity contracts on zkSync.",
+]
+noob = [
+  "Imagine a notebook that thousands of people each have an exact copy of. To add a page, most of them have to agree it's correct — and every page is glued to the one before with a fingerprint, so nobody can quietly change an old page without everyone noticing.",
+  "That's a blockchain. Nobody is in charge of the notebook, which is the whole idea: you don't have to trust one company or person to keep it honest. The \"agreeing\" part is called consensus, and there are many ways to do it — some burn electricity, some put money on the line, some just take a vote among known members.",
+  "It's slow and expensive compared with a normal database, so it only makes sense when the people involved really can't trust a single keeper. Bitcoin is the famous one; the projects here built the machinery themselves to understand it from the inside.",
+]
+[diagram]
+kind = "flow"
+items = ["Block 41", "hash →", "Block 42", "hash →", "Block 43"]
+caption = "Each block carries the fingerprint of the previous one; changing an old block breaks every link after it."

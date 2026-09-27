@@ -1,0 +1,17 @@
+name = "Self-hosting"
+tagline = "Running your own services — files, media, DNS, backups — on hardware you control instead of renting them from a company."
+pro = [
+  "Self-hosting means running the services you depend on — file storage, media, photos, password managers, DNS, git, monitoring — on hardware you own or rent as bare compute, rather than as someone else's product. The motives are ownership of data, independence from pricing and policy changes, privacy, and the learning that comes from operating the whole stack. The cost is that you are the operator: uptime, updates, backups and security are yours.",
+  "**Doing it properly.** Treat the machine as reproducible: every service a pinned container in a Compose file; every machine and network fact in one configuration file; secrets in one place, never in documents; a firewall with default deny; access only through a VPN; encrypted, off-site, restore-tested backups; documents that a stranger could rebuild from; and checks that compare the documents to the live system on a schedule. Anything done twice becomes a script.",
+  "**Trade-offs.** Convenience versus control. A hosted service is one click and someone else's problem; a self-hosted one is yours at 2 a.m. The owner's principle — privacy and security must not cost convenience — sets the bar: one tunnel that just works on every device, one command per routine task, and no service that only the owner can operate. Self-reliance, not asceticism.",
+  "**Here.** The personal server is a self-hosting project built to the lab's rules: hardened Ubuntu, Docker services, two VPN tunnels, split DNS, a reverse proxy, restic backups, a rescue path, and a documentation set with a build that refuses to run if the documents disagree with the live server. It was built to learn networking and cloud from the wire up.",
+]
+noob = [
+  "Instead of keeping your photos, files and passwords on some company's computers, you keep them on your own small server at home and reach it from anywhere through a private tunnel.",
+  "You get to own everything — nobody can change the price, read your data or shut the service down. And you have to look after everything, which is where most of the learning happens: backups, updates, security, and writing it all down so you could rebuild it.",
+  "The trick is making it convenient enough that you actually use it. The server on this site was built for exactly that, and to learn how networks and \"the cloud\" really work.",
+]
+[diagram]
+kind = "hub"
+items = ["Your server", "Files", "Media", "DNS", "Backups", "VPN in"]
+caption = "One machine, many services, one owner."

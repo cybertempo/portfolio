@@ -1,0 +1,17 @@
+name = "C"
+tagline = "The small, fast, close-to-the-metal language that operating systems and most other languages are built on."
+pro = [
+  "C is a compiled, statically typed language with almost no runtime: no garbage collector, no bounds checking, direct pointers into memory, and a thin standard library. It compiles to native machine code with predictable performance, which is why operating-system kernels (Linux, the BSDs, large parts of Windows and macOS), device drivers, embedded firmware, databases and the interpreters of Python, Ruby and Lua are written in it.",
+  "**How it works.** You manage memory yourself — `malloc` and `free` — and the compiler trusts you. Arrays are pointers; strings are byte arrays ending in a zero; a struct is laid out in memory exactly as declared. This transparency is the point: what you write maps almost one-to-one onto what the CPU does, and you can reason about cache lines, alignment and instruction counts.",
+  "**Trade-offs and the security angle.** The same trust is the danger. Writing past the end of a buffer, using memory after freeing it, or forgetting to initialise a value are not errors C will stop — they are the mechanism behind a large share of the most serious vulnerabilities of the last thirty years. Modern practice adds sanitizers, fuzzing and static analysis, and memory-safe languages (Rust, Go) for new systems code. For anyone doing systems security, C is essential knowledge precisely because the bugs live there.",
+  "**Here.** C is the language in which computer architecture, operating systems and networking were actually understood — sockets, processes, memory layout — and it is the reason the firewall, kernel and network stack on the personal server are legible rather than magic.",
+]
+noob = [
+  "C is one of the oldest languages still in daily use, and the most direct. It doesn't hold your hand: you tell the computer exactly which bit of memory to use, and it does exactly that, very fast, even if what you asked for was a mistake.",
+  "Because it's so direct, the operating system on your phone and laptop is mostly C, and so are the tools inside most other languages. When Python needs to do something fast, it quietly calls a piece of C.",
+  "It's also why security people learn it: the most famous computer bugs in history come from C programs touching memory they shouldn't. Understanding C is understanding how those break-ins actually work.",
+]
+[diagram]
+kind = "stack"
+items = ["Your app (any language)", "Language runtime (in C)", "Operating system (in C)", "Hardware"]
+caption = "Whatever you write in, there is C underneath it."

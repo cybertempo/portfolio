@@ -1,0 +1,17 @@
+name = "Unity"
+tagline = "A game engine for building 2D and 3D games and simulations for every platform."
+pro = [
+  "Unity is a cross-platform game engine: rendering (built-in, URP and HDRP pipelines), physics (PhysX), animation, audio, input, UI, terrain, particles and networking, with an editor for assembling scenes and a C# scripting layer. Game logic is written as components (`MonoBehaviour`) attached to objects in a scene, with lifecycle methods (`Start`, `Update`, `FixedUpdate`) called by the engine each frame. One project targets desktop, mobile, consoles, web and VR.",
+  "**How a game is built.** The scene is a hierarchy of GameObjects; behaviour is composed by attaching components; prefabs make reusable templates; the asset pipeline imports models, textures and sounds. Multiplayer uses Netcode for GameObjects or a third-party transport, with a host or dedicated server holding authoritative state. Profiling and the frame budget (16 ms at 60 fps) drive optimisation.",
+  "**Trade-offs.** Unity's breadth is its strength and its learning curve; the editor hides a great deal, and understanding what runs when matters for performance. Licensing changes in 2023 caused an industry backlash and drove interest in Godot and Unreal. For a student team it remains the fastest route from idea to a playable 3D build.",
+  "**Here.** The narrative multiplayer game — a 3D first-person social-deduction game — is a Unity project: multiplayer systems, gameplay testing and debugging on the owner's side, with a locally hosted, memory-augmented LLM driving an AI impostor whose dialogue adapts to the match.",
+]
+noob = [
+  "A game engine is the box of tools that handles the hard parts of a game — drawing 3D worlds, making things fall and collide, playing sounds, reading the controller — so you can focus on the game itself.",
+  "In Unity you build a world out of objects and attach little scripts to them: this door opens when touched, this character walks toward the player. The engine runs all those scripts sixty times a second.",
+  "The multiplayer game on this site was built in it, with an AI character whose lines change depending on what the players said earlier.",
+]
+[diagram]
+kind = "hub"
+items = ["Unity engine", "Rendering", "Physics", "Networking", "Your C# scripts"]
+caption = "The engine supplies the systems; your scripts supply the game."

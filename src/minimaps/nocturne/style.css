@@ -1,0 +1,56 @@
+/* Nocturne: cocoon → moth; a living vine with a magical familiar. */
+.nocturne{display:none;position:fixed;right:8px;top:50%;transform:translateY(-50%);width:144px;z-index:90;font-family:var(--mono);--spine:56px;--familiar-y:0%;--familiar-sway:0px;--familiar-lean:0deg;--bloom:0}
+.js .nocturne{display:block}
+.nocturne-title{position:absolute;top:-74px;left:25px;display:flex;gap:8px;align-items:center;font-size:.55rem;text-transform:uppercase;letter-spacing:.16em;color:var(--muted);white-space:nowrap}
+.nocturne-title span{width:5px;height:5px;border-radius:50%;background:var(--primary);box-shadow:0 0 10px rgba(var(--primary-rgb),.5)}
+.nocturne-track{position:relative;height:clamp(308px,45vh,420px);cursor:crosshair;touch-action:none}
+.nocturne-vine{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;fill:none}
+.nocturne-branches{stroke:var(--tertiary);stroke-width:.8;opacity:.48}
+.nocturne-guide{stroke:var(--faint);stroke-width:1;opacity:.6}
+.nocturne-growth{stroke:var(--primary);stroke-width:1.4;stroke-dasharray:0 1;filter:drop-shadow(0 0 4px rgba(var(--primary-rgb),.55))}
+.nocturne-reach{stroke:var(--warning);stroke-width:1;opacity:0;transition:opacity .2s}
+.nocturne[data-preview] .nocturne-reach{opacity:.8}
+.nocturne-familiar{position:absolute;left:var(--spine);top:var(--familiar-y);width:108px;height:126px;transform:translate(calc(-50% + var(--familiar-sway)),-50%);z-index:3;cursor:grab;touch-action:none;border-radius:45%}
+.nocturne-familiar:active{cursor:grabbing}
+.moth{width:100%;height:100%;overflow:visible;transform:rotate(var(--familiar-lean));filter:drop-shadow(0 0 5px rgba(var(--primary-rgb),.4))}
+.moth-seal{fill:none;stroke:var(--warning);stroke-width:.7;opacity:calc(.2 + var(--bloom) * .25);transform-origin:60px 70px;transform:rotate(var(--seal-turn,0deg))}
+.moth-seal circle:first-child{stroke-dasharray:17 9 2 9}
+.moth-seal circle:last-child{stroke:var(--secondary);stroke-dasharray:1 8}
+.moth-fore{fill:var(--panel2);stroke:var(--primary);stroke-width:1.5;stroke-linejoin:round}
+.moth-hind{fill:var(--bg2);stroke:var(--tertiary);stroke-width:1.2}
+.moth-vein,.moth-vein-lower{fill:none;stroke:var(--primary);stroke-width:.8;opacity:.75}
+.moth-eye{fill:rgba(var(--primary-rgb),.08);stroke:var(--warning);stroke-width:1;opacity:var(--bloom);transform-origin:60px 70px;transform:scaleX(var(--bloom))}
+.moth-body{fill:var(--bg);stroke:var(--primary);stroke-width:1.6}
+.moth-spine{stroke:var(--primary);stroke-width:1.6;filter:drop-shadow(0 0 4px var(--primary))}
+.moth-antennae{fill:none;stroke:var(--warning);stroke-width:1;opacity:var(--bloom)}
+.moth-dust{fill:var(--primary);opacity:var(--bloom);transform:translateY(var(--dust-rise,0px))}
+.nocturne[data-dragging] .moth{filter:drop-shadow(0 0 9px rgba(var(--primary-rgb),.65))}
+.nocturne-stops{list-style:none}
+.nocturne-stops a{position:absolute;right:0;top:var(--stop-y);transform:translateY(-50%);width:44px;height:44px;display:grid;place-items:center;text-decoration:none;z-index:2}
+.nocturne .map-node{width:9px;height:13px;border:1px solid var(--faint);border-radius:1px 80% 1px 80%;background:var(--bg);transform:rotate(-35deg);transition:background .2s,box-shadow .2s,transform .2s}
+.nocturne-stops a[data-passed] .map-node{border-color:var(--primary);background:rgba(var(--primary-rgb),.22);transform:rotate(-55deg) scale(1.15)}
+.nocturne-stops a[aria-current] .map-node{background:var(--primary);border-color:var(--primary);box-shadow:0 0 14px rgba(var(--primary-rgb),.5);transform:rotate(-35deg) scale(1.25)}
+.nocturne-stops a:hover .map-node,.nocturne-stops a:focus-visible .map-node{border-color:var(--warning);background:var(--warning);transform:rotate(-65deg) scale(1.25)}
+.nocturne .map-tooltip{position:absolute;right:140px;white-space:nowrap;color:var(--text);background:var(--bg2);border-left:2px solid var(--primary);padding:6px 10px;font-size:.65rem;opacity:0;visibility:hidden;transform:translateX(5px);transition:opacity .15s,transform .15s;pointer-events:none}
+.nocturne-stops a:hover .map-tooltip,.nocturne-stops a:focus-visible .map-tooltip{opacity:1;visibility:visible;transform:none}
+.nocturne-readout{position:absolute;top:calc(100% + 62px);right:10px;display:flex;flex-direction:column;align-items:flex-end;gap:3px;font-size:.6rem;line-height:1.3}
+.nocturne-percent{font-size:.75rem;color:var(--primary);font-variant-numeric:tabular-nums}
+.nocturne-label{color:var(--muted)}
+.nocturne-hint{position:absolute;right:0;top:calc(100% + 105px);width:190px;text-align:right;font-size:.53rem;color:var(--muted);opacity:0;transition:opacity .2s;pointer-events:none}
+.nocturne:hover .nocturne-hint,.nocturne:focus-within .nocturne-hint{opacity:1}
+.nocturne .map-index{display:none}
+@media(min-width:1181px){body:has(.nocturne) main,body:has(.nocturne) footer{margin-right:148px}}
+@media(max-width:1180px){
+  .nocturne{right:4px;width:64px;--spine:26px}
+  .nocturne-track{height:clamp(308px,42vh,360px)}
+  .nocturne-familiar{width:58px;height:68px}
+  .nocturne-title,.nocturne-label,.nocturne-hint{display:none}
+  .nocturne-readout{right:10px;top:calc(100% + 39px)}
+  .nocturne-percent{font-size:.6rem}
+  .nocturne .map-tooltip{right:62px}
+  body:has(.nocturne) main,body:has(.nocturne) footer{margin-right:64px}
+}
+@media(max-height:620px){.nocturne{display:none!important}body:has(.nocturne) main,body:has(.nocturne) footer{margin-right:0}}
+html:not(.js) body:has(.nocturne) main,html:not(.js) body:has(.nocturne) footer{margin-right:0}
+@media(prefers-reduced-motion:reduce){.nocturne *{animation:none!important;transition:none!important}.moth{transform:none}}
+@media print{.nocturne{display:none!important}body:has(.nocturne) main,body:has(.nocturne) footer{margin-right:0}}

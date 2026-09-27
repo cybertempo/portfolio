@@ -1,0 +1,17 @@
+name = "APIs"
+aliases = ["API"]
+tagline = "Application programming interfaces: the agreed way one program asks another for something."
+pro = [
+  "An API is a contract between programs: the requests one may make, the shape of the data in each, the responses and errors it can expect. Over the network the common style is REST over HTTP — resources at URLs, verbs for actions, JSON bodies — with GraphQL and gRPC as alternatives for flexible queries and high-performance internal calls. Locally, a library's public functions are an API too.",
+  "**Providing one well.** Validate every input at the boundary and return structured errors; version the contract so clients do not break; authenticate (keys, OAuth, OIDC) and rate-limit; document it — ideally generated from the code, as FastAPI does with OpenAPI; keep responses small and cacheable; and never trust the caller. **Consuming one well:** handle failure visibly, time out, retry with backoff, cache what you can, and keep secrets (API keys) out of client-side code.",
+  "**Trade-offs.** REST is universal and sometimes chatty; GraphQL gives clients precision and servers complexity; gRPC is fast and needs tooling. Third-party APIs are dependencies with their own uptime, pricing and change cadence — a robust app treats them as unreliable by default.",
+  "**Here.** APIs are both consumed (Open-Meteo in Skywatcher; Slack, Anthropic in CommitBot; Gemini in the scanner; MoonPay/Transak and Kleros in SmartPact) and provided (FastAPI in CommitBot and the blockchain node, Express in three projects). This site provides none — it is static by design — which is part of why it has nothing to break into.",
+]
+noob = [
+  "An API is like a restaurant menu for programs: it lists what you can ask for and exactly what you'll get back. Skywatcher asks a weather API \"what's the forecast for Ajman?\" and gets numbers it can draw.",
+  "Programs both *use* APIs (asking other services for weather, AI answers, payments) and *offer* them (so apps and other programs can ask them things). The rules on both sides: check every request, never trust the other side blindly, and expect it to fail sometimes.",
+]
+[diagram]
+kind = "flow"
+items = ["Program A", "Request (JSON)", "Program B", "Response (JSON)"]
+caption = "A contract between two programs that never see each other's code."

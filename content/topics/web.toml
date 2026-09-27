@@ -1,0 +1,18 @@
+name = "Web"
+aliases = ["Web development", "WebDev"]
+tagline = "Building things that run in a browser and are reached by a URL."
+pro = [
+  "Web development is the construction of software delivered through the browser: the **front end** (HTML, CSS, JavaScript, frameworks such as React) that runs on the user's device; the **back end** (APIs, databases, authentication) that runs on servers; and the plumbing between — HTTP, TLS, DNS, hosting, caching and CDNs. Its defining property is reach: no installation, any device, one URL.",
+  "**The landscape.** Static sites (files served as-is — fastest, safest, this site); single-page applications (a JavaScript app that renders in the browser and talks to an API — WebYes Shop); server-rendered apps (HTML produced per request, optionally enhanced — CommitBot's HTMX dashboard); and hybrids that render on the server first and hydrate in the browser (Next.js). Choosing among them is choosing where state lives and where work happens.",
+  "**What matters beyond the code.** Performance (bytes, requests, render-blocking resources), accessibility (semantic HTML, keyboard, contrast, reduced motion), security (CSP, HTTPS, no secrets in the client, every input untrusted), privacy (what third parties the page loads), and the fact that the browser is an adversarial runtime — anyone can read and modify what you send.",
+  "**Here.** WebYes Shop and Skywatcher are front-end projects, CommitBot's dashboard is server-rendered, SmartPact is a Web3 app, and this site is a static one that loads nothing from any other origin and is verified file-by-file after every deploy.",
+]
+noob = [
+  "Anything you open in a browser — a shop, a game, this page — is web development. Someone wrote the page you see, the style it's drawn in, the behaviour when you click, and the server that sends it all to you.",
+  "Some sites are just files (this one); some are full apps that run inside your browser (the shopping platform); some build each page on the server as you ask for it (CommitBot's dashboard). Picking which is a big part of the design.",
+  "Because anyone can open a web page, it has to be fast, work on a phone, be usable by people who can't see well, and assume every visitor might be up to no good.",
+]
+[diagram]
+kind = "flow"
+items = ["Browser asks URL", "Server responds", "HTML/CSS/JS", "Page on screen"]
+caption = "Request, response, render."

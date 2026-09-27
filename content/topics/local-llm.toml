@@ -1,0 +1,17 @@
+name = "Local LLM"
+tagline = "A large language model running on your own hardware instead of a cloud API."
+pro = [
+  "A local LLM is an open-weight model (Llama, Mistral, Qwen, Gemma, Phi) run on your own machine through a runtime such as llama.cpp, Ollama, vLLM or LM Studio. Weights are typically quantised (4–8 bits) so a 7–14 B parameter model fits in consumer GPU or even CPU memory. Nothing leaves the machine, there is no per-token cost, and it works offline — at the price of capability well below the frontier hosted models and hardware you must provide.",
+  "**How it is used.** The runtime exposes an OpenAI-compatible HTTP API on localhost, so the same client code works against a local or a cloud model. Context windows are smaller and inference slower, which makes prompt discipline matter more. **Memory-augmented** setups keep a store of past interactions and retrieve the relevant ones into the prompt (retrieval-augmented generation), so a small model can act consistently over a long session without the whole history in context.",
+  "**Trade-offs.** Privacy, cost and control against quality, speed and maintenance. A local model hallucinates more and follows complex instructions less reliably than a frontier model; it shines where the task is narrow and well-prompted, where data must not leave the premises, or where latency and cost per call must be near zero. Model choice and quantisation level are engineering decisions with measurable effects.",
+  "**Here.** The narrative game runs a locally hosted, memory-augmented model as its AI impostor: it remembers what happened earlier in the match and adapts its dialogue, with no network round-trip and no cloud dependency during play.",
+]
+noob = [
+  "Chat AIs usually live on a company's giant computers far away. A local LLM is one small enough to run on a normal PC, so it works offline and nothing you say leaves your machine.",
+  "It's less clever than the big cloud ones, but it's free to run, private, and fast enough for a focused job. Giving it a \"memory\" — a notebook of what happened earlier that it re-reads before answering — helps it stay consistent.",
+  "In the game on this site, one of the characters is played by a local AI that remembers what happened earlier in the match and changes its story to match.",
+]
+[diagram]
+kind = "flow"
+items = ["Player says something", "Memory: what happened", "Local model on the PC", "Character replies"]
+caption = "No internet round-trip; the model and its memory live on the machine."

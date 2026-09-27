@@ -1,0 +1,18 @@
+name = "AppSec"
+aliases = ["Application security"]
+tagline = "Application security: finding and fixing the vulnerabilities in the code itself, before an attacker does."
+pro = [
+  "Application security is the discipline of securing software at the application layer — the mistakes in the code and its configuration that let an attacker in even when the network and the host are sound. The OWASP Top 10 is its shared vocabulary: injection, broken access control, cryptographic failures, insecure design, security misconfiguration, vulnerable components, authentication failures, integrity failures, logging gaps, and server-side request forgery.",
+  "**How it is practised.** Threat modelling at design time; secure defaults (parameterised queries, output encoding, strict content-security policies, least-privilege service accounts); dependency scanning for known-vulnerable packages; **static analysis** of source for dangerous patterns; **dynamic** testing of the running app; code review with a security lens; and a fix-first workflow where findings are triaged by exploitability and impact. Findings from any automated tool — including an LLM — are leads to verify, not verdicts.",
+  "**Trade-offs.** Static tools are fast and noisy; dynamic tools find what is reachable and miss what is not; LLM-based analysis finds semantic issues rule-based tools cannot and also invents some. The productive combination is layered tooling plus a human who understands the application. Security review is cheapest at design time and most expensive after deployment.",
+  "**Here.** The AI code vulnerability scanner is an AppSec tool: it ingests a JavaScript codebase from a repository or an archive into an isolated session, asks Gemini 2.0 Flash to classify findings against the OWASP Top 10, and packages AI-corrected files as a remediation archive — a fast first pass for a human to confirm. This site practises AppSec on itself: a strict CSP, no inline script, no external resources, and a build that refuses secret-shaped strings.",
+]
+noob = [
+  "Network security guards the doors; AppSec checks the building itself for weak walls — mistakes in the program's own code that let someone in, like a login form that trusts whatever you type into it.",
+  "Security people keep a top-ten list of the most common mistakes (the OWASP Top 10). AppSec work is designing so they don't happen, then reading and testing the code to catch the ones that did.",
+  "The scanner project reads other people's code looking for exactly those mistakes, and suggests fixes — a fast first look that a person then confirms.",
+]
+[diagram]
+kind = "flow"
+items = ["Application code", "Find weaknesses (OWASP)", "Fix in the code", "Verify the fix"]
+caption = "Security built into the program, not bolted on around it."

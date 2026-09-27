@@ -1,0 +1,17 @@
+name = "Docker"
+tagline = "Packages a program with everything it needs so it runs identically on any machine."
+pro = [
+  "Docker is a container platform: it packages an application with its runtime, libraries and configuration into an **image** — an immutable, layered filesystem built from a `Dockerfile` — and runs it as a **container**, an isolated process that shares the host kernel but has its own filesystem, network namespace and resource limits. Containers start in milliseconds and are far lighter than virtual machines because there is no guest operating system.",
+  "**How it works.** Each `Dockerfile` instruction adds a cached layer; images are content-addressed and shared through registries. Isolation comes from Linux kernel features — namespaces (what the process can see) and cgroups (what it can use). Docker Compose describes a multi-container system in one YAML file: services, networks, volumes, and the environment each needs. Volumes hold the data that must outlive the container; everything else is disposable.",
+  "**Trade-offs and security.** Reproducibility is the win — the same image runs on a laptop and a server — but only if images are **pinned** to versions and rebuilt deliberately; `latest` is a slow way to rot. Containers are not a security boundary by default: a root process in a container is root on the host if it escapes, so run as non-root, drop capabilities, keep images minimal, and never trust an image you did not build or verify.",
+  "**Here.** Every service on the personal server (media, DNS, reverse proxy, monitoring) is a pinned image described in Compose, so the whole machine is text files plus backups and can be rebuilt from scratch — the lab's reproducibility rule made concrete.",
+]
+noob = [
+  "Ever heard \"it works on my computer\"? Docker fixes that. It packs a program together with every single thing it needs — the right version of everything — into a box called an **image**, and the box runs the same on any machine.",
+  "The running box is a **container**. You can run lots of them on one computer, each sealed off from the others, and if one misbehaves you throw it away and start a fresh one in a second. A file called a Dockerfile is the recipe for the box; a Compose file lists all the boxes an app needs.",
+  "It's how modern servers are run: not by installing things by hand, but by writing down the recipe and letting Docker build it — so the whole server can be rebuilt from text.",
+]
+[diagram]
+kind = "flow"
+items = ["Dockerfile", "Image (frozen box)", "Container (running)", "Same on any host"]
+caption = "Text file → frozen image → running container — reproducible every time."

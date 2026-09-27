@@ -1,0 +1,17 @@
+name = "slack-bolt"
+tagline = "Slack's official framework for building Slack apps and bots."
+pro = [
+  "Bolt is Slack's framework (JavaScript, Python, Java) for building apps on the Slack platform. It handles the plumbing — verifying request signatures, acknowledging events within Slack's three-second window, OAuth installation flows, and the differences between HTTP endpoints and Socket Mode — and exposes the platform as listeners: `@app.command`, `@app.event`, `@app.shortcut`, `@app.action`, `@app.view`.",
+  "**How it works.** Slack sends your app a payload when something happens (a slash command, a message, a button press). Bolt routes it to the matching listener, which must `ack()` quickly and can then do slower work and respond via the Web API (`chat.postMessage`, ephemeral messages, modals built with Block Kit). Python Bolt integrates with async frameworks, so it can live inside a FastAPI app alongside a web UI.",
+  "**Trade-offs.** The platform's rules shape the design: acknowledge fast, do the work after; scopes must be requested precisely; rate limits apply per method. Testing needs either Slack's signing secret in a dev workspace or careful mocking. Bolt makes the happy path short; the app's own logic — what to do with what was said — is still the real work.",
+  "**Here.** CommitBot is a Bolt app inside FastAPI: slash commands, message shortcuts and event subscriptions capture commitments; a regex pre-filter and an opt-in LLM agent classify them; the reminder engine posts back into channels with escalating cadence; Sign in with Slack (OIDC) authenticates the dashboard.",
+]
+noob = [
+  "Slack is a chat app that companies use. slack-bolt is the toolkit for making a robot that lives inside Slack: it hears when someone types a command or mentions it, and lets your code reply, post messages or pop up a form.",
+  "Slack is strict about speed — your robot has three seconds to say \"got it\" — so Bolt handles that reflex and lets your code take its time with the actual work afterwards.",
+  "CommitBot is one of those robots: it notices when someone promises to do something in chat and reminds them before the deadline, more insistently as it gets closer.",
+]
+[diagram]
+kind = "flow"
+items = ["/commit in Slack", "Slack → your app", "Bolt listener", "Reply / reminder"]
+caption = "Slack forwards the event; Bolt routes it to the matching listener in your code."

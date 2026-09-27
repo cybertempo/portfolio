@@ -1,0 +1,17 @@
+# Cyberpunk Neon Noir — near-black navy page, midnight-grey cards, neon cyan, reddish
+# pink-violet (fuchsia) for lines and glows, neon green terminal, neon yellow awards, magenta-red only for danger.
+name      = "Cyberpunk Neon Noir"
+bg        = "#050416"
+bg2       = "#0a0826"
+panel     = "#20242b"   # midnight grey: every card in every section
+panel2    = "#171a20"   # the darker end of card gradients
+text      = "#e6f6ff"
+muted     = "#9aa5c4"
+faint     = "#5e6890"
+stroke    = "#02020c"
+primary   = "#05d9e8"
+secondary = "#d946ef"
+tertiary  = "#3b82f6"
+success   = "#39ff9b"
+warning   = "#f9f002"
+danger    = "#ff2a6d"

@@ -1,0 +1,17 @@
+name = "Web3.js"
+tagline = "A JavaScript library for talking to Ethereum-compatible blockchains from a web app."
+pro = [
+  "Web3.js is the original JavaScript client library for Ethereum-compatible chains. It connects to a node or a wallet provider (MetaMask injects one into the page), reads chain state (balances, blocks, events), encodes calls to smart contracts using their **ABI** (the JSON description of a contract's functions), and asks the wallet to sign and broadcast transactions. ethers.js and viem are the leaner modern alternatives with the same role.",
+  "**How it works.** `new web3.eth.Contract(abi, address)` gives a JavaScript object whose methods map to contract functions; `.call()` reads without a transaction, `.send()` asks the wallet to sign one. The page never holds private keys — the wallet does, and the user approves each signature. Events emitted by contracts are subscribed to for live updates.",
+  "**Trade-offs.** Web3.js is large and its API has legacy corners; ethers/viem are smaller and typed. All of them share the same operational realities: gas estimation, pending-transaction UX, chain switching, and the fact that a read is free but every write costs the user money and a confirmation click.",
+  "**Here.** SmartPact's React front end uses Web3.js with Web3Auth and MetaMask for authentication, to create and manage agreements on its Solidity contracts on zkSync, and to drive on/off-ramp payments through MoonPay and Transak.",
+]
+noob = [
+  "A blockchain app has a normal website on the front and smart contracts on the chain at the back. Web3.js is the phone line between them — the page uses it to ask the contract questions and to send it signed instructions.",
+  "The page never holds your keys: your wallet (like MetaMask) does the signing, and you approve each action with a click. Reading is free; changing something costs a small fee.",
+  "SmartPact uses it to connect its web pages to the contracts that hold and release payments.",
+]
+[diagram]
+kind = "flow"
+items = ["React page", "Web3.js", "Wallet signs", "Contract on chain"]
+caption = "The page never holds your keys; the wallet signs, Web3.js carries."

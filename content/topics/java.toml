@@ -1,0 +1,17 @@
+name = "Java"
+tagline = "A strongly typed, compiled language that runs the same on any machine with a Java Virtual Machine."
+pro = [
+  "Java is a statically typed, class-based, garbage-collected language. Source compiles to platform-neutral bytecode that the Java Virtual Machine executes, with a just-in-time compiler turning hot paths into native code at run time — which is why long-running Java services are fast despite the abstraction. It is the backbone of enterprise back ends (Spring), Android, and large parts of big-data tooling (Hadoop, Kafka, Elasticsearch are JVM projects).",
+  "**How it works.** Everything is a class; interfaces define contracts; generics give type-safe collections; checked exceptions force callers to handle failure. The JVM manages memory with generational garbage collectors that can be tuned for throughput or latency. Build tools (Maven, Gradle) resolve dependencies and produce a JAR that runs anywhere a JVM exists.",
+  "**Trade-offs.** Verbosity — Java says in ten lines what Python says in three, though records, `var` and lambdas have narrowed the gap. Start-up time and memory footprint are higher than a native binary, which matters for short-lived processes and containers. Its strength is the opposite case: large teams, long-lived code, and compilers that catch whole categories of mistakes before anything runs.",
+  "**Here.** Java is where object-oriented design was learned properly — classes, interfaces, and the discipline of a compiler that refuses ambiguity — and it remains the language of choice for systems that must be maintained by many hands over many years.",
+]
+noob = [
+  "Java is a language where you have to be very precise: you say what type every piece of data is (a number, a word, a list), and the computer checks your whole program before it will run any of it. Annoying at first; a lifesaver on big projects, because most mistakes get caught before they happen.",
+  "Its big trick is the **Java Virtual Machine**. You write the program once and it's turned into a middle form that the JVM understands; the JVM exists for Windows, Mac, Linux and Android, so the same program runs on all of them without changes.",
+  "That's why banks, airlines and most Android apps run on Java: it's built for programs that are large, live for years, and are worked on by whole teams.",
+]
+[diagram]
+kind = "flow"
+items = ["Java source", "Compiler → bytecode", "JVM on any OS", "Running program"]
+caption = "Write once, compile once, run anywhere the JVM exists."

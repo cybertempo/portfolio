@@ -1,0 +1,17 @@
+name = "WireGuard"
+tagline = "A small, fast, modern VPN protocol built into the Linux kernel."
+pro = [
+  "WireGuard is a layer-3 VPN protocol and implementation designed to be small enough to audit (about 4,000 lines in the kernel) and faster than IPsec or OpenVPN. Each peer is identified by a Curve25519 public key; traffic is encrypted with ChaCha20-Poly1305, hashed with BLAKE2s, and keys are agreed through a Noise-protocol handshake. There are no cipher negotiations and no legacy options: one fixed, modern suite.",
+  "**How it works.** A peer's configuration is a public key, an optional endpoint, and **allowed IPs** — the addresses that may appear inside packets from that peer, which doubles as routing table and access-control list (\"cryptokey routing\"). Handshakes are cheap and rotate keys automatically; the protocol is silent to unauthenticated packets, so a WireGuard port does not answer scanners. Roaming just works: a peer's endpoint updates whenever an authenticated packet arrives from a new address.",
+  "**Trade-offs.** Its fixed design is a strength and a limit: no username/password model (it is keys or nothing), no built-in key distribution, and the fixed packet shape makes it recognisable to deep-packet inspection — the gap AmneziaWG fills. Key management is the operator's job: one key per device, revoked individually.",
+  "**Here.** WireGuard is the private path to every service on the personal server: services bind to the tunnel address, the firewall drops everything else, and adding or revoking a device is one line in a table rendered into config. Nothing is offered to the office LAN in plaintext.",
+]
+noob = [
+  "A VPN is a private tunnel through the public internet: everything inside is scrambled so nobody in between can read it, and the far end thinks you're on its own network. WireGuard is a very simple, very fast way to build that tunnel.",
+  "Each device gets its own key, like a personal door key. Lose a phone? Delete that one key and the phone can't get in any more, while everyone else's still works. And the door doesn't even answer knocks from strangers — to a scanner it looks like there's nothing there.",
+  "It's built into Linux itself and is now the VPN most of the modern ones (like Tailscale) are built on.",
+]
+[diagram]
+kind = "flow"
+items = ["Your laptop", "encrypted tunnel", "Server", "Private services"]
+caption = "Services exist only at the far end of the tunnel; from outside, there is nothing to see."

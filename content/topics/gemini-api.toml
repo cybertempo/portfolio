@@ -1,0 +1,17 @@
+name = "Gemini API"
+tagline = "Google's API for its Gemini language models."
+pro = [
+  "The Gemini API provides access to Google's Gemini family — multimodal models that take text, images, audio and video, with very large context windows and a fast, low-cost tier (Flash) beside the larger Pro models. It supports structured (JSON-schema) output, function calling, streaming and safety settings. Gemini 2.0 Flash is the tier used when a lot of text must be analysed cheaply.",
+  "**How it is used well.** As with any LLM API, the model's answers are leads, not verdicts: a security finding from a model must be confirmed by a rule, a test or a human before it is acted on. Constrain output with a schema so the response is machine-checkable; chunk large inputs deliberately; and measure precision and recall against known cases rather than trusting fluent prose.",
+  "**Trade-offs.** Large context and low cost make it attractive for whole-codebase analysis; the flip side is confident false positives and occasional misses, and source code sent to the API leaves your environment — a consideration for private repositories. Model versions rotate; pin and re-evaluate.",
+  "**Here.** The vulnerability scanner sends JavaScript source to Gemini 2.0 Flash with a prompt built around the OWASP Top 10, receives findings and proposed fixes, and packages the AI-corrected files into a downloadable remediation archive — with the caveat, built into the design, that findings are for a human to verify.",
+]
+noob = [
+  "Like the Anthropic API, but for Google's AI. Your program sends it text (or images) and gets an answer back.",
+  "The vulnerability scanner project sends it code and asks: \"what's insecure here, and how would you fix it?\" — then packages the fixed files for download.",
+  "An AI's opinion on security is a lead to check, not a verdict — the scanner is a fast first pass, and a person confirms what it finds.",
+]
+[diagram]
+kind = "flow"
+items = ["JavaScript file", "Gemini 2.0 Flash", "Findings + fixed code", "Download archive"]
+caption = "Code in, security findings and a corrected copy out."

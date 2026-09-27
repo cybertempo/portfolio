@@ -1,0 +1,17 @@
+name = "Solidity"
+tagline = "The language for writing smart contracts on Ethereum and compatible chains."
+pro = [
+  "Solidity is a statically typed, contract-oriented language that compiles to EVM bytecode. A contract holds **state** (storage variables persisted on-chain) and **functions**; deploying it creates an address; calling a function is a transaction that every node executes deterministically. Every operation costs **gas**, storage writes are by far the most expensive, and deployed code is immutable unless an upgrade pattern (proxies) was designed in from the start.",
+  "**How it works.** Types are explicit (`uint256`, `address`, `mapping`, `struct`); `payable` functions receive Ether; `modifier`s enforce access control; `event`s emit logs that off-chain clients index. Tooling: Hardhat or Foundry for compiling, testing and deploying; OpenZeppelin for audited standard contracts (ERC-20, ERC-721, access control) that you should use rather than rewrite.",
+  "**The security discipline.** Reentrancy (an external call re-entering your function before state is updated — the DAO hack), integer overflow (checked since 0.8), unchecked external calls, access-control mistakes and front-running are the classic failures, and there is no patching after deployment. Checks-effects-interactions ordering, minimal logic on-chain, exhaustive tests, and an audit before real money are not optional.",
+  "**Here.** SmartPact's agreement and payment logic is Solidity: contracts that hold funds in escrow for freelancer–client, rental and subscription agreements, release them when conditions are met, and route disputes to Kleros arbitration — deployed on zkSync Era to keep gas affordable.",
+]
+noob = [
+  "A smart contract is a small program that lives on a blockchain and runs exactly as written — nobody can stop it or change it once it's out. Solidity is the language you write those programs in.",
+  "Because you can't fix it afterwards, you have to get it right the first time; a bug in a contract holding money is a bug someone will find. That's why smart-contract hacks make the news, and why writing one carefully is a real skill.",
+  "SmartPact on this site uses these contracts to hold payment safely until work is delivered, then release it automatically.",
+]
+[diagram]
+kind = "flow"
+items = ["Solidity source", "Compile → bytecode", "Deploy on chain", "Runs on every call"]
+caption = "Once deployed, the code is the agreement."

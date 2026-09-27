@@ -1,0 +1,18 @@
+name = "LLM agents"
+aliases = ["AI agents", "Agents"]
+tagline = "A language model given tools and a goal, deciding what to do next in a loop."
+pro = [
+  "An agent wraps a language model in a loop: it sees a goal and the current state, chooses an action — call a tool (search, read a file, run code, query an API), ask a question, or finish — observes the result, and continues. The model supplies judgement about *what to do next*; the tools supply the ability to *do* it; the loop supplies persistence. Coding agents, research agents and workflow bots are all this pattern with different tools.",
+  "**What makes one reliable.** Narrow, well-described tools with validated inputs; a clear stopping condition; a budget (steps, tokens, time) so it cannot run away; a cheap pre-filter so the model is invoked only when a rule cannot decide; verification of each consequential action by something that is not the model (a test, a schema, a human); and logs of every step. Prompt injection — instructions smuggled in through data the agent reads — is the signature security risk, and the defence is least privilege on the tools.",
+  "**Trade-offs.** Agents extend a model's reach from answering to acting, which is exactly why they need guard rails: an error is now a side effect, not a wrong sentence. The best current use is bounded, verifiable work — refactor this, classify these, triage that — with a human deciding what ships.",
+  "**Here.** CommitBot's capture pipeline is an agent with a regex gate in front: only messages that might contain a commitment reach Claude, which classifies and extracts a deadline under a schema, and the result is verified before a reminder is ever scheduled. Claude Code is an agent whose tools are a repository and a shell; the vulnerability scanner is a single-step agent over source code.",
+]
+noob = [
+  "A chat AI answers a question. An **agent** is an AI that can also *do* things: look something up, run a program, check the result, and decide what to do next — round and round until the job is finished.",
+  "Because it can act, it needs rules: which tools it may use, when to stop, and a check on anything important — the same way you'd give a new assistant limited keys and review their work.",
+  "CommitBot is a small agent (it decides whether a chat message is a promise and when it's due); the tool that built this site is a bigger one, with a code editor and a terminal as its hands.",
+]
+[diagram]
+kind = "flow"
+items = ["Goal", "Model picks a tool", "Tool runs", "Result → model", "Done?"]
+caption = "Think, act, observe — repeated until the goal is met."

@@ -1,0 +1,17 @@
+name = "Redis"
+tagline = "An in-memory data store used for caching, queues, counters and anything that must be fast."
+pro = [
+  "Redis is an in-memory key–value store with rich data structures — strings, hashes, lists, sets, sorted sets, streams, bitmaps, HyperLogLog — and single-digit-microsecond operations. Because everything lives in RAM and commands execute on a single thread in strict order, it doubles as a coordination point: atomic counters, locks, rate limiters, leaderboards, pub/sub messaging and job queues.",
+  "**How it is used.** As a **cache** in front of a slower database (read Redis first; on a miss, read the database and write Redis with a TTL); as a **session store**; as a **message broker** (lists or streams as queues); for **rate limiting** (increment a counter per key with expiry). Persistence is optional — periodic snapshots (RDB) or an append-only log (AOF) — and replication plus Sentinel or Cluster give availability and scale.",
+  "**Trade-offs.** RAM is the budget: data larger than memory does not fit, and eviction policies decide what goes. Durability is weaker than a database by design; treat Redis as fast-but-losable unless configured otherwise. A cache invalidation strategy is the hard part of any cache, and Redis does not solve it for you. Never expose it to the network without authentication — an open Redis is a classic breach.",
+  "**Here.** Redis is the fast layer of the multi-consensus blockchain deployment platform, holding hot network state and coordination between node processes while MongoDB keeps the durable records.",
+]
+noob = [
+  "A normal database writes to disk, which is safe but slow. Redis keeps everything in the computer's memory, which is thousands of times faster — perfect for things you look up constantly.",
+  "It's the sticky note next to the filing cabinet: the answer you need right now, without opening the drawer. Apps use it to remember who's logged in, to count things very quickly, and to pass messages between parts of the system.",
+  "The catch is that memory is small and can be lost when the power goes, so Redis holds the fast copy and something slower holds the permanent one.",
+]
+[diagram]
+kind = "flow"
+items = ["Request", "Redis (RAM) hit?", "Yes → instant", "No → database"]
+caption = "Answer from memory when you can; go to the slow store only when you must."

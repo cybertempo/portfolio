@@ -1,0 +1,18 @@
+name = "JavaScript"
+aliases = ["Vanilla JS ES2022", "JS"]
+tagline = "The language every web browser runs — and, with Node.js, the language of many servers too."
+pro = [
+  "JavaScript is the only language browsers execute natively, which makes it unavoidable for anything interactive on the web. It is dynamically typed, prototype-based, single-threaded with an event loop, and — since ES2015 — a genuinely capable language: modules, classes, arrow functions, promises and `async`/`await`, destructuring, and (ES2022) private class fields, top-level `await` and `Array.at()`. TypeScript layers static types on top and compiles down to it.",
+  "**How it runs.** The browser parses your script and runs it on the page's single main thread; long work blocks rendering, so anything slow is asynchronous (callbacks, promises) or moved to a Web Worker. The DOM is the live tree of the page, and JavaScript's job is usually to listen for events and change that tree. Engines like V8 compile hot code to machine code at run time, so well-written JavaScript is fast.",
+  "**Trade-offs.** The type system's looseness (`==`, implicit coercion) is a well-known source of bugs; the ecosystem moves fast and a project can accumulate hundreds of dependencies. \"Vanilla JS\" means using the language and browser APIs directly, without React or another framework — smaller pages and no build step, at the cost of writing state management and DOM updates yourself.",
+  "**Here.** Skywatcher is vanilla ES2022 by design (private class fields, modules, `Promise.allSettled`); WebYes Shop and SmartPact use JavaScript through React; the vulnerability scanner both is written in it (Node) and analyses it. This site's own behaviour — the decode animation, the spider, the menu — is about 200 lines of dependency-free JavaScript.",
+]
+noob = [
+  "When a web page does something — a menu opens, a form checks your spelling, a game runs — that's JavaScript. Every browser has a JavaScript engine built in, so it's the one language that runs on every computer and phone on earth without installing anything.",
+  "A web page is a tree of boxes (headings, buttons, images). JavaScript waits for something to happen — a click, a key, a timer — and then changes the tree: adds a box, hides one, fills in text. That's most of what it does.",
+  "\"Vanilla\" JavaScript just means plain JavaScript with nothing added, like vanilla ice cream. Skywatcher on this site is written that way: no framework, just the language and the browser.",
+]
+[diagram]
+kind = "flow"
+items = ["HTML page", "app.js loads", "User clicks", "Page changes"]
+caption = "JavaScript listens for what the user does and changes the page in response."

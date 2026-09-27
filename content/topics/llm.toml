@@ -1,0 +1,18 @@
+name = "LLM"
+aliases = ["Large language model"]
+tagline = "Large language model: a neural network trained on text that predicts the next token — and, at scale, converses, reasons and writes code."
+pro = [
+  "A large language model is a transformer neural network trained on a very large corpus to predict the next **token** (a word piece). Pre-training gives it knowledge and fluency; instruction tuning and reinforcement learning from feedback turn next-token prediction into a model that follows requests and holds a conversation. Capability grows with parameters, data and compute; the frontier models (Claude, GPT, Gemini) are hosted; open-weight models (Llama, Mistral, Qwen) can run locally.",
+  "**How it behaves.** Output is generated one token at a time, sampled from a probability distribution, so it is fluent by construction and correct only by tendency. The **context window** is its working memory — everything it can see for this answer — and cost scales with tokens in and out. It has no access to anything outside the context unless given **tools** (search, code execution, APIs), which is the basis of agents. Retrieval-augmented generation feeds it relevant documents so it answers from them rather than from memory.",
+  "**Trade-offs and failure modes.** Hallucination (confident fabrication), sensitivity to phrasing, inconsistency across runs, prompt injection (instructions hidden in data it reads), and training-data cut-offs. The engineering response: constrain outputs with schemas, verify anything consequential with a rule or a test, keep the model out of the loop where a cheap rule suffices, and treat text the model reads as data, never as instructions.",
+  "**Here.** LLMs appear in three shapes: as an API (Claude in CommitBot's classifier, Gemini in the vulnerability scanner), as a local model (the game's memory-augmented impostor), and as an agent (Claude Code, which built this site). In every case the design puts a cheap gate before the model and a verification step after it.",
+]
+noob = [
+  "An LLM is the kind of AI you can chat with. It read a huge amount of text and learned to guess what words should come next — so well that it can answer questions, write stories, explain things, and even write code.",
+  "It can only see what's in front of it right now (its \"context\"), and it makes up its answers word by word, so it's fluent even when it's wrong. Anything important it says has to be checked.",
+  "Given tools — a way to search, run code, or use an app — it becomes an **agent** that can do things, not just talk. The projects on this site use LLMs in all three ways: through an online service, running locally, and as the agent that built this page.",
+]
+[diagram]
+kind = "flow"
+items = ["Your prompt", "Tokens in", "Model predicts next token", "Answer out"]
+caption = "One token at a time, very fast."

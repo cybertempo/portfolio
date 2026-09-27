@@ -1,0 +1,18 @@
+name = "Game dev"
+aliases = ["Game development"]
+tagline = "Building interactive worlds: rendering, physics, input, networking and the design that makes them fun."
+pro = [
+  "Game development is real-time software engineering plus design. The engine (Unity, Unreal, Godot) supplies rendering, physics, animation, audio, input and networking; the team supplies mechanics, levels, narrative, art and the tuning that makes the result fun. Everything happens inside a frame budget — 16.7 ms at 60 fps — so performance is a first-class constraint from the first day.",
+  "**The loop and the systems.** The game loop reads input, updates the world (physics, AI, game logic), and renders, every frame. State is organised as objects with components; behaviour is scripted (C# in Unity); assets flow through an import pipeline. Multiplayer adds authoritative state, synchronisation and latency compensation. Playtesting is the core method: what is fun is discovered, not specified.",
+  "**Trade-offs.** Engines abstract a great deal and hide a great deal; understanding what runs when is the difference between 60 fps and 20. Scope is the classic killer — a small, finished game beats a large, unfinished one. Team projects need clear ownership of systems and a build that everyone can run.",
+  "**Here.** The 3D first-person multiplayer social-deduction game: the owner contributed narrative, lore and mechanics, implemented the multiplayer systems, and led gameplay testing and debugging; a locally hosted, memory-augmented LLM plays the impostor with dialogue that adapts to the match.",
+]
+noob = [
+  "Making a game means building a world that redraws itself sixty times a second, deciding what happens when things touch, and making it fun — which takes a lot of playing, watching people play, and fixing.",
+  "An engine like Unity does the heavy lifting (drawing, physics, sound); the team writes the rules, the story and the levels. Multiplayer adds the puzzle of keeping every player's screen in step.",
+  "The game on this site is a 3D multiplayer deduction game with an AI character that remembers what happened and adapts its lines.",
+]
+[diagram]
+kind = "flow"
+items = ["Input", "Update world", "Render frame", "Repeat 60×/s"]
+caption = "The game loop: everything happens inside one frame."

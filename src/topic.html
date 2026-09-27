@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="{{csp}}">
+<meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="{{theme_bg}}">
+<title>{{name}} — {{full_name}}</title>
+<meta name="description" content="{{tagline}}">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<link rel="stylesheet" href="../palette.css">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body class="topic-page">
+
+<div class="fx-noise" aria-hidden="true"></div>
+
+<nav class="nav" aria-label="Main">
+  <a class="logo" href="../index.html"><span class="logo-user">{{handle}}</span><span class="logo-at">@</span><span class="logo-host">{{host}}</span><span class="logo-prompt">:~$</span> <span class="logo-cmd">man {{slug}}</span></a>
+  <a class="btn ghost small" href="../index.html#skills">← back</a>
+</nav>
+
+<main class="topic">
+  <header class="topic-head">
+    <p class="sec-tag">[topic] — {{slug}}</p>
+    <h1 class="glitch2 glitch-loop" data-text="{{name}}">{{name}}</h1>
+    <p class="topic-tagline">{{tagline}}</p>
+  </header>
+
+  <div class="tabs">
+    <input type="radio" name="level" id="lvl-pro" checked>
+    <input type="radio" name="level" id="lvl-kid">
+    <div class="tab-labels" role="tablist" aria-label="Explanation level">
+      <label for="lvl-pro" role="tab">{{pro_label}}</label>
+      <label for="lvl-kid" role="tab">{{noob_label}}</label>
+    </div>
+    <section class="pane pane-pro" aria-label="{{pro_label}}">
+{{pro}}
+    </section>
+    <section class="pane pane-kid" aria-label="{{noob_label}}">
+{{kid}}
+    </section>
+  </div>
+
+  <figure class="diagram">
+{{diagram}}
+    <figcaption>{{caption}}</figcaption>
+  </figure>
+
+{{used_in}}
+</main>
+
+<footer>{{footer}}</footer>
+</body>
+</html>

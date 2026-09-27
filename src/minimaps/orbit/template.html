@@ -1,0 +1,31 @@
+<nav class="orbit" aria-label="{{map_title}}">
+  <div class="orbit-panel" id="orbitPanel" hidden>
+    <div class="orbit-heading"><span>{{map_title}}</span><span class="orbit-percent" aria-hidden="true">00%</span></div>
+    <div class="orbit-dial">
+      <svg class="orbit-instrument" viewBox="0 0 224 224" aria-hidden="true">
+        <circle class="orbit-ticks" cx="112" cy="112" r="104"/>
+        <path class="orbit-track" d="M52.603 171.397 A84 84 0 1 1 171.397 171.397"/>
+        <path class="orbit-trail" pathLength="1" d="M52.603 171.397 A84 84 0 1 1 171.397 171.397"/>
+        <g class="orbit-gyro"><ellipse cx="112" cy="112" rx="56" ry="26"/><ellipse cx="112" cy="112" rx="26" ry="56"/></g>
+        <g class="orbit-hand"><path d="M174 112 H183"/><circle cx="196" cy="112" r="5"/></g>
+      </svg>
+      <div class="orbit-scrub" role="slider" tabindex="0" aria-label="{{map_scrub}}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-describedby="orbitHint"></div>
+      <div class="orbit-readout" aria-hidden="true"><span class="orbit-index">00</span><span class="orbit-label">{{map_start}}</span></div>
+      <ol class="orbit-stops">
+{{rail_stops}}
+      </ol>
+    </div>
+    <p class="orbit-hint" id="orbitHint">{{map_hint}}</p>
+  </div>
+  <button class="orbit-toggle" type="button" aria-expanded="false" aria-controls="orbitPanel" aria-label="{{map_toggle}}">
+    <svg viewBox="0 0 224 224" aria-hidden="true">
+      <circle class="orbit-mini-track" cx="112" cy="112" r="84"/>
+      <path class="orbit-trail" pathLength="1" d="M52.603 171.397 A84 84 0 1 1 171.397 171.397"/>
+      <g class="orbit-gyro"><ellipse cx="112" cy="112" rx="48" ry="21"/><ellipse cx="112" cy="112" rx="21" ry="48"/></g>
+      <g class="orbit-hand"><circle cx="196" cy="112" r="10"/></g>
+      <circle class="orbit-core" cx="112" cy="112" r="8"/>
+    </svg>
+    <span class="orbit-toggle-copy"><span>{{map_toggle}}</span><span class="orbit-percent">00%</span></span>
+    <span class="orbit-toggle-sign" aria-hidden="true">+</span>
+  </button>
+</nav>

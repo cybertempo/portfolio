@@ -1,0 +1,18 @@
+name = "Smart contracts"
+aliases = ["Smart contract"]
+tagline = "Programs that live on a blockchain and execute agreements automatically, exactly as written."
+pro = [
+  "A smart contract is code deployed to a blockchain: it has an address, holds state and (on Ethereum-style chains) funds, and exposes functions anyone can call by sending a transaction. Every node executes the same call and reaches the same result, so the outcome is enforced by the network rather than by a court or an intermediary. Standards (ERC-20 tokens, ERC-721 NFTs) make contracts interoperable; decentralised exchanges, lending, escrow and DAOs are compositions of them.",
+  "**How they are built and used.** Written in Solidity (or Vyper), compiled to EVM bytecode, tested with Hardhat or Foundry, deployed once. Users interact through a wallet that signs transactions; a front end (Web3.js, ethers) encodes calls. Gas makes computation and especially storage expensive, so on-chain logic is kept minimal and large data lives off-chain with only hashes recorded.",
+  "**Trade-offs.** Immutability is the feature and the danger: bugs are permanent unless an upgrade path was designed in, and funds in a buggy contract are gone. Everything on a public chain is public. Oracles are needed for any real-world fact, and they reintroduce trust. The genuine use is agreements between parties who cannot or should not trust an intermediary — escrow, conditional payment, transparent rules.",
+  "**Here.** SmartPact's contracts hold payment in escrow for freelancer–client, rental and subscription agreements, release it when conditions are met, and hand disputes to Kleros arbitration — on zkSync Era so fees stay small. The permissioned blockchain project sits underneath the same idea, implementing the chain such contracts would run on.",
+]
+noob = [
+  "A smart contract is an agreement written as a program: \"when the work is delivered, release the payment.\" It runs on the blockchain by itself — nobody has to be trusted to keep their word, because the code does it.",
+  "Once it's out there it can't be changed, which is great for trust and terrible for bugs — so they're written slowly and tested hard.",
+  "SmartPact on this site uses them to hold a payment safely until both sides are satisfied, with a neutral arbitration service if they disagree.",
+]
+[diagram]
+kind = "flow"
+items = ["Agreement as code", "Deployed on chain", "Condition met", "Payment released"]
+caption = "The contract enforces itself."

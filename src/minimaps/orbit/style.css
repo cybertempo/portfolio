@@ -1,0 +1,44 @@
+/* ── orbital minimap: an instrument that opens into a page navigator ──── */
+.orbit{display:none;position:fixed;right:1.25rem;bottom:max(1.25rem,env(safe-area-inset-bottom));z-index:95;font-family:var(--mono);--orbit-angle:135deg;--orbit-progress:0;--gyro-angle:0deg}
+.js .orbit{display:block}
+.orbit-toggle{display:flex;align-items:center;gap:.6rem;padding:.35rem .85rem .35rem .35rem;border:1px solid var(--faint);border-radius:99px;background:var(--bg2);color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,.3);cursor:pointer;font:inherit;transition:border-color .2s,background .2s}
+.orbit-toggle:hover,.orbit-toggle[aria-expanded="true"]{border-color:var(--primary);background:var(--panel)}
+.orbit-toggle svg{width:46px;height:46px;overflow:visible}
+.orbit-toggle-copy{display:grid;text-align:left;font-size:.62rem;gap:.05rem}
+.orbit-percent{color:var(--primary);font-variant-numeric:tabular-nums}
+.orbit-toggle-sign{color:var(--muted);font-size:1rem;transition:transform .25s}
+.orbit-toggle[aria-expanded="true"] .orbit-toggle-sign{transform:rotate(45deg)}
+.orbit-panel{position:absolute;right:0;bottom:calc(100% + 12px);width:256px;padding:15px;border:1px solid var(--faint);border-radius:16px;background:var(--bg2);box-shadow:0 16px 60px rgba(0,0,0,.4)}
+.orbit-panel[hidden]{display:none}
+.orbit-heading{display:flex;justify-content:space-between;font-size:.63rem;letter-spacing:.08em;color:var(--muted)}
+.orbit-dial{position:relative;width:224px;height:224px;margin:10px 0 4px}
+.orbit-instrument{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.orbit-track,.orbit-mini-track{fill:none;stroke:var(--faint);stroke-width:1}
+.orbit-mini-track{stroke-width:3;stroke-dasharray:2 10}
+.orbit-ticks{fill:none;stroke:var(--secondary);stroke-width:4;stroke-dasharray:1 8;opacity:.4}
+.orbit-trail{fill:none;stroke:var(--primary);stroke-width:2;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--orbit-progress));stroke-linecap:round}
+.orbit-toggle .orbit-trail{stroke-width:5}
+.orbit-gyro{fill:none;stroke:var(--secondary);stroke-width:1;opacity:.25;transform-origin:112px 112px;transform:rotate(var(--gyro-angle))}
+.orbit-toggle .orbit-gyro{stroke-width:3;opacity:.7}
+.orbit-hand{fill:var(--primary);stroke:var(--primary);stroke-width:2;transform-origin:112px 112px;transform:rotate(var(--orbit-angle))}
+.orbit-core{fill:var(--warning)}
+.orbit-scrub{position:absolute;inset:13px;border-radius:50%;cursor:grab;touch-action:none}
+.orbit-scrub:active{cursor:grabbing}
+.orbit-scrub:focus-visible{outline-offset:0;border-radius:50%}
+.orbit-readout{position:absolute;inset:75px 34px;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;line-height:1.6}
+.orbit-index{color:var(--primary);font-size:1.65rem;font-variant-numeric:tabular-nums}
+.orbit-label{color:var(--text);font-size:.62rem;text-align:center}
+.orbit-stops{list-style:none}
+.orbit-stops a{position:absolute;left:var(--stop-x);top:var(--stop-y);transform:translate(-50%,-50%);display:grid;place-items:center;width:44px;height:44px;border-radius:50%;text-decoration:none;color:var(--muted);font-size:.6rem}
+.orbit-stops a .map-index{display:grid;place-items:center;width:25px;height:25px;border:1px solid var(--faint);border-radius:50%;background:var(--bg2);transition:background .2s,color .2s,border-color .2s}
+.orbit-stops a[data-passed] .map-index{border-color:var(--primary);color:var(--primary)}
+.orbit-stops a:hover span,.orbit-stops a:focus-visible span{border-color:var(--primary);background:var(--panel);color:var(--text)}
+.orbit-stops a[aria-current] .map-index{background:var(--primary);border-color:var(--primary);color:var(--bg);box-shadow:0 0 0 4px rgba(var(--primary-rgb),.12)}
+.orbit-hint{font-size:.56rem;color:var(--muted);text-align:center}
+@media(max-width:600px){.orbit{right:.75rem;bottom:max(.75rem,env(safe-area-inset-bottom))}.orbit-toggle-copy{display:none}.orbit-toggle{gap:.25rem;padding-right:.7rem}.orbit-panel{width:256px}}
+@media(max-height:440px){.orbit-panel{bottom:0;right:calc(100% + 10px)}}
+
+
+.orbit .map-node,.orbit .map-tooltip{display:none}
+@media(prefers-reduced-motion:reduce){.orbit *{transition:none!important}}
+@media print{.orbit{display:none!important}}

@@ -1,0 +1,386 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PORTFOLIO CONTENT — the only file to edit to change what the site says.
+#
+# Change this file, then on the LAPTOP run:   bash scripts/build.sh
+# The build validates every field, refuses anything wrong, and writes dist/.
+# Never edit dist/ by hand; it is overwritten on every build.
+#
+# Markup allowed inside text values (everything else is shown literally):
+#   **bold**               → bold
+#   {primary}text{/}          → coloured text; tones: cyan purple magenta green yellow muted
+#   //text                 → a whole line that is a comment in terminal output
+#
+# Links: leave a url as "" to hide that link. The build lists every hidden
+# link so you know what is still missing; the visitor never sees a dead one.
+# ─────────────────────────────────────────────────────────────────────────────
+
+[identity]
+first    = "Sreenandan"
+last     = "Pradeep"
+handle   = "sreenandan"                # shell-style username shown in prompts
+host     = "portfolio"                 # shell-style hostname shown in prompts
+role     = "Cybersecurity & Networking"   # appended to the browser tab title
+email    = "sreenandanpradeep404@gmail.com"
+location = "Ajman, UAE"
+status   = "Open to work"              # the pill in the top-right corner
+# The picture, as a file under src/assets/. It is derived automatically from
+# source/<same name>.png — a background-removed PNG — whenever that changes.
+# To swap it: put the new PNG in source/, change this line, build.
+# (scripts/build-photo.py explains how to remove a background in one click.)
+photo    = "sreenandan.webp"
+# How much of the picture to show, from the top: 1.0 = the whole figure,
+# 0.45 = head to chest. Changing it re-derives the web image on the next build.
+photo_keep_top = 0.34
+
+[design]
+# Colour scheme: a file in content/palettes/ (see _README.md there). Swap the
+# whole look by changing this one word and building.
+palette = "neon-noir"
+# The falling background streams spell this text as hexadecimal bytes (UTF-8).
+rain_text = "sreenandan pradeep"
+# A ghost of a failed request: this text glitches across the page every half
+# minute or so, behind the content. Leave it empty to switch it off.
+ghost_text = "404"
+# Minimap module: folder under src/minimaps/. Swap independently of the palette.
+minimap = "spider"
+
+[minimap]
+# Stencilled on the spider's abdomen, like a lab specimen. Empty for none;
+# tag_tone is a palette slot: primary, secondary, tertiary, success,
+# warning, danger or muted.
+tag      = "404"
+tag_tone = "warning"
+title = "Page map"
+toggle = "Page map"
+start = "Start"
+hint = "Drag to explore · select a node"
+scrub = "Page position"
+
+[meta]
+# What search engines and link previews (LinkedIn, WhatsApp, X) show.
+description = "Portfolio of Sreenandan Pradeep — Computer Science & Engineering graduate, cybersecurity & networking enthusiast, blockchain builder, full-stack developer. Highest GATE scorer of the 2026 batch at RSET."
+# Public URL once deployed (used for canonical and preview tags). "" until known.
+url = "https://sreenandan-pradeep.vercel.app"
+# Preview image, relative to src/assets/. "" for none.
+image = ""
+
+[topics]
+# The two explanation levels on every explainer page.
+pro_label  = "Pro"
+noob_label = "Noob"
+
+[nav]
+# Section labels as they appear in the top bar, in order. The keys are fixed
+# (they are the section anchors); only the shown words change.
+about        = "About"
+skills       = "Skills"
+projects     = "Projects"
+experience   = "Experience"
+achievements = "Achievements"
+certifications = "Certifications"
+contact      = "Contact"
+
+[hero]
+kicker   = "// initialising secure connection"
+lead     = "**Cybersecurity & networking enthusiast** — Computer Science & Engineering graduate, highest GATE scorer of the 2026 batch at RSET, and builder of hardened infrastructure, decentralised systems and AI-driven applications. Heading for cloud and network security; currently pursuing an MCA in Cloud Computing."
+cta_primary   = "View projects"
+cta_secondary = "Get in touch"
+scroll_hint   = "scroll"
+typed = [
+  "curiosity first — the real question is always how it works underneath",
+  "understand over memorise: tools change, the principles do not",
+  "ask what happens when it fails before stopping when it works",
+  "security is a habit",
+  "documentation is part of the build",
+  "security + convenience = bliss",
+  "the unsolved problem is the interesting one",
+  "a hacker in the original sense — take it apart, then make it do something better",
+]
+
+[[hero.stats]]
+value = "9+"
+label = "builds"
+
+[[hero.stats]]
+value = "2"
+label = "internships"
+
+[about]
+tag   = "[01] — whoami"
+title = "Identity **decoded**"
+paragraphs = [
+  "I care about **privacy and security** — and about **convenience** exactly as much. Making the two agree is a design problem, and the kind I like: find my own way to a solution, then build the thing that makes the problem go away.",
+  "Networks are where my curiosity settled. Whoever runs the network sets the rules for everything on it — I would rather set my own than live inside someone else's. The **personal server** is that belief built: hardened, tunnelled, documented well enough to rebuild from nothing.",
+  "Along the way: blockchain research at **NIT Calicut**, software engineering at **Mozilor Technologies**, and independent work across self-hosted infrastructure, blockchain and multiplayer AI-driven games.",
+]
+
+# The terminal transcript. `cmd` is typed at the prompt; `out` is what it prints.
+[[about.terminal]]
+cmd = "whoami"
+out = ["sreenandan_pradeep — cybersec // cloud // blockchain // ML // AI-assisted dev"]
+
+[[about.terminal]]
+cmd = "cat location.txt"
+out = ["Ajman, UAE"]
+
+[[about.terminal]]
+cmd = "cat education.log"
+out = [
+  "MCA, Cloud Computing (open learning)  {warning}[in progress]{/}",
+  "B.Tech CSE — RSET (Autonomous), CGPA 8.41  {warning}[2022–2026]{/}",
+  "Higher secondary — Durga HSS, Kanhangad, 98%  {warning}[2022]{/}",
+  "Secondary — Al Ameer English School, Ajman, 91.6%  {warning}[2020]{/}",
+]
+
+[[about.terminal]]
+cmd = "cat languages.txt"
+out = ["English · Malayalam · Tamil {muted}(rudimentary){/} · Hindi {muted}(rudimentary){/}"]
+
+[[about.terminal]]
+cmd = "sudo apt install soft-skills"
+out = [
+  "{secondary}[sudo] password for sreenandan: ********{/}",
+  "{success}Unpacking soft-skills (latest)...{/}",
+  "{success}Planning ................ [OK]{/}",
+  "{success}Critical thinking ....... [OK]{/}",
+  "{success}Intellectual curiosity .. [OK]{/}",
+  "{success}Leadership .............. [OK]{/}",
+  "{warning}0 vulnerabilities found. system hardened.{/}",
+]
+
+[skills]
+tag   = "[02] — arsenal"
+title = "Tools I **reach for**"
+# Every item here (and every stack item on a project) is a button: clicking it
+# opens an explainer page from content/topics/<slug>.toml, with a professional
+# and a 12-year-old version; an item without one refuses the build. (A group
+# may set  linked = false  for plain text, but none does: soft skills live in
+# the terminal transcript instead, where nothing looks clickable.)
+
+[[skills.groups]]
+title = "Languages"
+items = ["Python", "Java", "C", "JavaScript"]
+
+[[skills.groups]]
+title = "Frameworks & tools"
+items = ["Node.js", "FastAPI", "SQL", "Docker", "Git", "Claude Code"]
+
+[[skills.groups]]
+title = "Domains"
+items = ["AI-assisted development", "Blockchain", "Decentralised systems", "Cryptography", "Systems security", "Network security", "Machine learning"]
+
+[projects]
+tag   = "[03] — missions"
+title = "Deployed **operations**"
+archive_label = "Load more from the archive"
+
+# ── Featured projects. To add one, copy a block and change the values.
+#    domains: the fields the project is actually in — shown as badges
+#    tone:    primary | secondary | tertiary | success | warning | danger   (badge colour slot)
+#    url:     where the TITLE links — the repository, or the live site.
+#             "" = the title is plain text (the build reports it)
+#    note:    optional small print under the title — team size, course, context
+#    links:   label = url — extra buttons; an empty url hides the button
+
+[[projects.featured]]
+domains = ["Security", "Networking", "VPN", "Self-hosting"]
+tone  = "danger"
+url   = ""
+title = "Personal server — hardened self-hosted infrastructure"
+note  = "Solo · in daily use"
+desc  = "Hardened Ubuntu server: default-deny nftables firewall, key-only SSH, two encrypted VPN tunnels (WireGuard + AmneziaWG obfuscation), a VPN-only rescue path with one-command device enrolment and revocation, templated firewall/NAT/DNS/proxy configs with a scripted rebuild from scratch, and encrypted database-consistent backups with a verified restore drill."
+stack = ["Docker", "nftables", "WireGuard", "AmneziaWG", "restic"]
+[projects.featured.links]
+GitHub = ""
+Docs   = ""
+
+[[projects.featured]]
+domains = ["Blockchain", "Cryptography", "Desktop app"]
+tone  = "secondary"
+url   = ""
+title = "Multi-level permissioned blockchain desktop app"
+note  = "Team of 4"
+desc  = "Cross-platform Electron + React desktop app talking to a local FastAPI blockchain node. Built from scratch: ECDSA signatures, Merkle trees, a pluggable consensus engine (PBFT, Raft, Tendermint, PoS, DPoS, PoA), and protocol-level RBAC/ACL permissions."
+stack = ["Python", "FastAPI", "React", "Electron", "ECDSA"]
+[projects.featured.links]
+GitHub = ""
+Demo   = ""
+
+[[projects.featured]]
+domains = ["Blockchain", "Cryptography", "Distributed storage"]
+tone  = "secondary"
+url   = ""
+title = "Multi-consensus blockchain deployment system"
+note  = "Research internship · NIT Calicut"
+desc  = "Prototype platform for deploying custom blockchain networks with PoW, PoS or PoB. Devised a token-free incentive mechanism using allocated IPFS storage space. Built under Prof. Dr. Hiran V. Nath at NIT Calicut."
+stack = ["Node.js", "Express", "Redis", "MongoDB", "IPFS"]
+[projects.featured.links]
+GitHub = ""
+Paper  = ""
+
+[[projects.featured]]
+domains = ["LLM agents", "Back end", "Automation"]
+tone  = "warning"
+url   = ""
+title = "CommitBot — LLM-powered Slack application"
+note  = "Solo · Mozilor internship"
+desc  = "Slack bot + server-rendered dashboard (FastAPI, slack-bolt, HTMX) that captures commitments from slash commands, regex notations, message shortcuts or an opt-in LLM agent. A cheap regex pre-filter gates which messages reach the Anthropic API, keeping calls cheap and false positives low; an escalating reminder engine (APScheduler, 7 jobs) speeds up as deadlines approach; reassignment with accept/decline and a full audit trail; 9 SQLAlchemy tables, Sign in with Slack (OIDC), 137 automated tests."
+stack = ["Python", "FastAPI", "slack-bolt", "HTMX", "APScheduler", "SQLAlchemy", "Anthropic API"]
+[projects.featured.links]
+GitHub = ""
+Live   = ""
+
+[[projects.featured]]
+domains = ["Web", "Front end"]
+tone  = "primary"
+url   = ""
+title = "WebYes Shop — React e-commerce platform"
+note  = "Solo · Mozilor internship"
+desc  = "Full-featured e-commerce SPA with URL-driven search and category filtering, a sliding cart drawer plus full cart page, global cart and auth state in React Context keyed by product + variant, per-user persisted carts, 32 automated tests (Vitest, React Testing Library), and Vercel deployment with SPA rewrites."
+stack = ["React 18", "Vite", "React Router v6", "Context API", "Vitest"]
+[projects.featured.links]
+GitHub = ""
+Live   = ""
+
+[[projects.featured]]
+domains = ["Web", "APIs"]
+tone  = "primary"
+url   = ""
+title = "Skywatcher — multi-city weather dashboard"
+note  = "Solo · Mozilor internship"
+desc  = "Framework-free dashboard (native ES2022 modules) tracking up to 8 cities via Open-Meteo forecast and geocoding APIs with browser geolocation. Object-oriented core with private fields and a custom error subclass routing between toasts and retryable cards; debounced live search, °C/°F toggle, and fault-tolerant 10-minute auto-refresh with Promise.allSettled."
+stack = ["Vanilla JS ES2022", "Open-Meteo API", "HTML5/CSS3"]
+[projects.featured.links]
+GitHub = ""
+Live   = ""
+
+[[projects.featured]]
+domains = ["Game dev", "LLM", "Multiplayer"]
+tone  = "warning"
+url   = ""
+title = "Multiplayer narrative game with a memory-augmented LLM"
+note  = "Academic major project · team of 4"
+desc  = "3D first-person multiplayer social-deduction game in Unity with a locally hosted, memory-augmented LLM powering an AI impostor with adaptive dialogue. Contributed narrative, lore and gameplay mechanics; implemented multiplayer systems and led gameplay testing and debugging."
+stack = ["Unity", "C#", "Local LLM"]
+[projects.featured.links]
+GitHub  = ""
+Trailer = ""
+
+[[projects.featured]]
+domains = ["Blockchain", "Smart contracts", "Web3"]
+tone  = "secondary"
+url   = ""
+title = "SmartPact — blockchain-based agreement platform"
+note  = "Academic minor project · team of 4"
+desc  = "Co-developed a contract-management platform for freelancer–client, rental and subscription agreements with payments automated by smart contracts. Web3 authentication (Web3Auth, MetaMask, email), Kleros-based arbitration, on/off-ramp crypto payments (MoonPay/Transak), Solidity contracts on zkSync Era L2, React + Web3.js front end, Node.js/Express + MongoDB back end."
+stack = ["Solidity", "zkSync Era", "React", "Web3.js", "Node.js", "MongoDB"]
+[projects.featured.links]
+GitHub = ""
+Live   = ""
+
+[[projects.featured]]
+domains = ["Security", "LLM", "AppSec"]
+tone  = "danger"
+url   = ""
+title = "AI code vulnerability scanner & corrector"
+note  = "Team of 4 · contributor"
+desc  = "Assisted in building an automated security-analysis back end that ingests public GitHub repos or .zip uploads (simple-git, adm-zip) with isolated per-user sessions, evaluates JavaScript codebases with the Gemini 2.0 Flash API for semantic OWASP Top 10 detection, and packages AI-corrected files into downloadable remediation archives."
+stack = ["Node.js", "Express", "Gemini API", "simple-git"]
+[projects.featured.links]
+GitHub = ""
+Live   = ""
+
+# ── Archive: smaller pieces, shown collapsed.
+
+[[projects.archive]]
+title = "Wine quality classification & clustering (team of 2)"
+desc  = "Four supervised classifiers on the UCI dataset — Decision Tree hit 78.9% test accuracy; K-Means and AGNES both converged on a natural two-cluster structure."
+
+[[projects.archive]]
+title = "MarketPro"
+desc  = "Supermarket inventory management system for small retailers — stock tracking, sales management and accurate billing."
+
+[[projects.archive]]
+title = "Empay"
+desc  = "Employee payroll system managing payroll runs, employee records and tax deductions for small companies."
+
+[experience]
+tag   = "[04] — operation log"
+title = "Field **experience**"
+
+[[experience.entries]]
+date = "Mar 2026 — May 2026"
+role = "Software Engineer Intern — WebDev domain"
+org  = "Mozilor Technologies"
+desc = "Completed projects including a commitment-recording tool, a weather app and an online shopping platform using JavaScript, Node.js and a Python-Flask API — gaining deep insight into industry-level software engineering."
+
+[[experience.entries]]
+date = "May 2025 — Jul 2025"
+role = "Research Intern — Blockchain domain"
+org  = "NIT Calicut · under Prof. Dr. Hiran V. Nath"
+desc = "Designed and developed a multi-consensus blockchain deployment system with IPFS integration — gaining deep, hands-on expertise in decentralised systems."
+
+[achievements]
+tag   = "[05] — trophies"
+title = "Unlocked **achievements**"
+
+# icon: a figure drawn in the palette's colours — trophy | medal | star | certificate | bolt | flag
+[[achievements.items]]
+icon  = "trophy"
+big   = "GATE"
+title = "Top GATE scorer — batch 2026, RSET"
+desc  = "Highest marks in GATE among the 2026 batch at Rajagiri School of Engineering and Technology (RSET).\nGATE 2025 (CS): score 527 · AIR 5691 of 170,825 candidates."
+
+[[achievements.items]]
+icon  = "medal"
+big   = "3rd prize"
+title = "UI Alchemists hackathon"
+desc  = "Second runner-up in the UI Alchemists hackathon conducted by IEDC RSET."
+
+[[achievements.items]]
+icon  = "star"
+big   = "100/100"
+title = "CBSE Class 10 English"
+desc  = "Full marks — among the top students nationally to receive CBSE's merit certificate."
+
+[certifications]
+tag   = "[06] — credentials"
+title = "Courses & **certifications**"
+# url: the certificate or course page; "" = shown without a link.
+
+[[certifications.items]]
+title  = "From Learner to Builder: Become an AI Agent Architect"
+issuer = "IBM SkillsBuild"
+url    = ""
+
+[[certifications.items]]
+title  = "Cryptography and Network Security"
+issuer = "NPTEL"
+url    = ""
+
+[[certifications.items]]
+title  = "Ethical Hacking"
+issuer = "NPTEL"
+url    = ""
+
+[contact]
+tag   = "[07] — uplink"
+title = "Establish a **secure connection**"
+blurb = "// handshake initialised — my inbox is listening on port 25."
+email_label = "Email"
+# A résumé PDF to offer for download, relative to src/assets/. "" = no button.
+# Before setting this, remove anything from the PDF you would not put on a
+# public page (a phone number, document numbers): the file becomes public.
+resume       = "sreenandan-pradeep-resume.pdf"
+resume_label = "Résumé (PDF)"
+# Other links: label = url. Empty url = hidden (and reported by the build).
+# The owner's decision (27 Sep 2026): email is the ONLY way to make contact;
+# GitHub is here as the code link, on the personal account, not the internship
+# one. No phone, LinkedIn or X - on the page or in the résumé.
+[contact.links]
+GitHub   = "https://github.com/cybertempo"
+
+[footer]
+# {year} is filled in at build time. The privacy line is true by construction:
+# the build refuses any external script, style, font or image.
+line = "© {year} Sreenandan Pradeep · no trackers, no cookies, no third-party requests · built on nothing but the passion to make cool things"

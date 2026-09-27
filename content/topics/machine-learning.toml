@@ -1,0 +1,18 @@
+name = "Machine learning"
+aliases = ["ML"]
+tagline = "Programs that learn patterns from examples instead of being given explicit rules."
+pro = [
+  "Machine learning fits a model to data so it can make predictions about data it has not seen. **Supervised** learning maps inputs to known labels — classification (which category) and regression (what value); **unsupervised** learning finds structure without labels — clustering, dimensionality reduction; **reinforcement** learning learns from reward. Deep learning is the subset using multi-layer neural networks, which is where language and vision models live.",
+  "**How it works in practice.** Most of the effort is data: cleaning, feature engineering, and above all avoiding *leakage* — information from the test set contaminating training. A model is judged on held-out data with the right metric for the problem (accuracy is misleading on imbalanced classes; precision, recall and F1 say more). Cross-validation guards against a lucky split; a baseline (predict the majority class) tells you whether the model learned anything at all.",
+  "**Trade-offs.** Simple models (logistic regression, decision trees) are interpretable and often good enough; complex ones (gradient boosting, neural networks) win on accuracy and lose on explainability and data hunger. Overfitting — memorising the training set — is the constant failure mode. A model that works in the lab and fails in production usually met data that differed from the training distribution.",
+  "**Here.** The wine-quality project compared four supervised classifiers on the UCI dataset — a Decision Tree performed best at 78.9 % test accuracy — and two clustering methods, K-Means and AGNES, which both converged on a natural two-cluster structure. Machine learning is also the substrate of the LLM work: CommitBot's classifier and the game's memory-augmented model are applied ML.",
+]
+noob = [
+  "Instead of writing rules like \"if it has whiskers, it's a cat\", you show the computer thousands of cat and dog photos with the right answers, and it works out the rules itself. That's machine learning.",
+  "Then you test it on photos it has never seen. If it only remembers the training photos, it hasn't learned anything — it's just cheating off its own notes. The real score is on the new photos.",
+  "It's behind spam filters, recommendations, voice assistants and the AI chatbots. The wine project on this site did the classic version: give the computer measurements of wines and their ratings, and see if it can predict a rating it hasn't seen.",
+]
+[diagram]
+kind = "flow"
+items = ["Examples with answers", "Train a model", "Test on unseen data", "Predict new cases"]
+caption = "The test on unseen data is what separates learning from memorising."

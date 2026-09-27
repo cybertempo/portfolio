@@ -1,0 +1,29 @@
+<nav class="nocturne" aria-label="{{map_title}}">
+  <div class="nocturne-title" aria-hidden="true"><span></span>{{map_title}}</div>
+  <div class="nocturne-track">
+    <svg class="nocturne-vine" aria-hidden="true">
+      <path class="nocturne-branches"/>
+      <path class="nocturne-guide"/>
+      <path class="nocturne-growth" pathLength="1"/>
+      <path class="nocturne-reach"/>
+    </svg>
+    <div class="nocturne-familiar" role="slider" tabindex="0" aria-label="{{map_scrub}}" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-describedby="nocturneHint">
+      <svg class="moth" viewBox="0 0 120 140" aria-hidden="true">
+        <g class="moth-seal"><circle cx="60" cy="70" r="51"/><path d="M60 13V20 M60 120V127 M3 70H10 M110 70H117 M22 32 27 37 M93 103 98 108 M22 108 27 103 M93 37 98 32"/><circle cx="60" cy="70" r="44"/></g>
+        <g class="moth-wings">
+          <g class="moth-left"><path class="moth-hind"/><path class="moth-fore"/><path class="moth-vein"/><path class="moth-vein-lower"/><ellipse class="moth-eye" cx="29" cy="56" rx="5" ry="8"/></g>
+          <g class="moth-right" transform="translate(120 0) scale(-1 1)"><path class="moth-hind"/><path class="moth-fore"/><path class="moth-vein"/><path class="moth-vein-lower"/><ellipse class="moth-eye" cx="29" cy="56" rx="5" ry="8"/></g>
+        </g>
+        <path class="moth-body"/>
+        <path class="moth-spine" d="M60 48V91"/>
+        <path class="moth-antennae" d="M57 50Q40 28 44 20 M63 50Q80 28 76 20"/>
+        <g class="moth-dust"><circle cx="18" cy="87" r="1"/><circle cx="93" cy="24" r="1.3"/><circle cx="101" cy="106" r="1"/></g>
+      </svg>
+    </div>
+    <ol class="nocturne-stops">
+{{rail_stops}}
+    </ol>
+  </div>
+  <div class="nocturne-readout" aria-hidden="true"><span class="nocturne-percent">00%</span><span class="nocturne-label">{{map_start}}</span></div>
+  <p class="nocturne-hint" id="nocturneHint">{{map_hint}}</p>
+</nav>

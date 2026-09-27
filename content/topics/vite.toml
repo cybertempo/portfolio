@@ -1,0 +1,17 @@
+name = "Vite"
+tagline = "A fast front-end build tool: instant dev server, optimised production bundles."
+pro = [
+  "Vite is a build tool and development server for front-end projects. In development it serves your source files as native ES modules and transforms them on demand with esbuild, so start-up is near-instant regardless of project size and edits hot-reload in milliseconds. For production it bundles with Rollup: tree-shaking, code splitting, minification, content-hashed file names for caching, and asset handling.",
+  "**How it works.** The browser requests modules one by one; Vite transforms each (TypeScript, JSX, CSS modules) as it is asked for, and pre-bundles dependencies once so `node_modules` does not become thousands of requests. Hot Module Replacement swaps a changed module in the running page without losing state. Plugins (the Rollup plugin interface) cover frameworks, PWA, and anything else.",
+  "**Trade-offs.** Dev and production use different pipelines (esbuild vs Rollup), so a rare bug can appear only in the build — test the production bundle before shipping. For a plain static page with no framework, a build tool is unnecessary weight; Vite earns its place once there are components, TypeScript or many modules.",
+  "**Here.** WebYes Shop is built and served with Vite (React 18, Vitest for tests reusing the same config). This site, by contrast, has no bundler at all — its JavaScript is two hand-written files, which is the right size for a static page.",
+]
+noob = [
+  "A modern web app is hundreds of files that have to be combined and shrunk before a browser gets them. Vite does that job, and while you're working it shows your changes in the browser the instant you save.",
+  "It's fast because it only prepares the files the browser actually asks for, as it asks for them, instead of rebuilding everything on every change.",
+  "The shopping platform on this site is built with it; a simple page like this one doesn't need a build tool at all.",
+]
+[diagram]
+kind = "flow"
+items = ["Source files", "Vite dev server (instant)", "Vite build", "Small bundle for users"]
+caption = "Fast while developing, compact when shipping."

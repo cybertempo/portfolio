@@ -1,0 +1,18 @@
+name = "Decentralised systems"
+aliases = ["Decentralized systems"]
+tagline = "Systems with no single owner or single point of failure: many independent machines cooperating by protocol."
+pro = [
+  "A decentralised system distributes **control**, not just computation: no node is trusted more than any other, membership may be open, and correctness comes from protocol rules — consensus, signatures, content addressing — rather than from an operator. Blockchains, IPFS, BitTorrent, Tor and federated systems like Matrix or the Fediverse are the familiar examples; each makes a different trade between openness, performance and coordination cost.",
+  "**The fundamental problems.** Agreement among parties that may fail or lie (Byzantine fault tolerance); the impossibility of perfect consistency, availability and partition tolerance at once (CAP); identity without a registrar (public keys); incentives that keep strangers cooperating (proof of work, staking, storage rewards); and discovery — how nodes find each other (DHTs, gossip). Every real system is a specific answer to these.",
+  "**Trade-offs.** Coordination is slow and expensive compared with a central database; user experience suffers when there is no one to reset a password; governance becomes a protocol-design question. The honest engineering test is whether a single trusted operator is unacceptable — if it is not, a centralised system is simpler, faster and cheaper. Decentralisation is a means to resilience and censorship-resistance, not a virtue in itself.",
+  "**Here.** Three projects are decentralised systems built from their primitives: a permissioned blockchain with a pluggable consensus engine, a multi-consensus deployment platform with IPFS storage as its incentive, and a Web3 agreement platform on a ZK rollup. The personal server, by contrast, is deliberately centralised and self-reliant — the owner's own answer to the same question of whom to depend on.",
+]
+noob = [
+  "Most apps have one company in the middle running everything. A decentralised system has no middle — lots of computers owned by different people follow the same rules and check each other's work.",
+  "Nobody can switch it off or change the rules alone, and it keeps working if some computers fail. But getting thousands of strangers to agree is slow, and there's no help desk to reset your password.",
+  "So it's only worth it when trust really matters. Bitcoin, BitTorrent and the projects on this site are examples; this site itself is deliberately *not* one, because a simple page doesn't need it.",
+]
+[diagram]
+kind = "hub"
+items = ["Shared protocol", "Node (Kerala)", "Node (Berlin)", "Node (Tokyo)", "Node (Ajman)"]
+caption = "No centre: every node follows the same rules and verifies the others."

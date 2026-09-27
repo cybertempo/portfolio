@@ -1,0 +1,17 @@
+name = "Web3"
+tagline = "Web applications whose back end is a blockchain: users hold their own keys, and state lives on-chain."
+pro = [
+  "A Web3 application pairs a conventional front end with smart contracts as its back end. Identity is a wallet key pair rather than an account on a server; state changes are transactions the user signs; data lives on-chain or in content-addressed storage (IPFS); payments are native to the platform. Wallets (MetaMask, or embedded wallets via services like Web3Auth that log in with email or social accounts) bridge the user and the chain.",
+  "**How it fits together.** The page reads chain state through a library (Web3.js, ethers, viem) and a node provider; writes go through the wallet for signing; events from contracts update the UI. Fees and confirmation times shape the experience, which is why Layer 2s (zkSync, Arbitrum, Optimism) matter; on/off-ramps (MoonPay, Transak) convert between fiat and crypto so a user can pay a rent deposit without already owning tokens; arbitration protocols (Kleros) provide dispute resolution without a court.",
+  "**Trade-offs.** Self-custody means no password reset and full responsibility for keys; every write costs money and a confirmation click; public chains are transparent; the tooling and UX are younger than the ordinary web's. It is the right architecture when the value is precisely that no intermediary holds the funds or the rules.",
+  "**Here.** SmartPact is a complete Web3 application: Web3Auth and MetaMask login, Solidity escrow contracts on zkSync Era, Kleros arbitration for disputes, MoonPay/Transak on- and off-ramps, a React + Web3.js front end and a Node/Express + MongoDB back end for what does not belong on-chain.",
+]
+noob = [
+  "In a normal app, the company holds your account and your money. In a Web3 app, *you* hold the key to your account in a wallet, and the app's rules and payments live on a blockchain instead of on the company's server.",
+  "That means nobody can freeze your funds or change the rules quietly — and also that if you lose your key, nobody can give it back. Every action costs a small fee, which is why these apps run on cheaper \"Layer 2\" chains.",
+  "SmartPact on this site is one: log in with a wallet, agree a job or a rental, and the payment sits safely in a contract until the deal is done.",
+]
+[diagram]
+kind = "flow"
+items = ["Web page", "Wallet signs", "Web3.js sends", "Smart contract", "Chain stores"]
+caption = "The user's key never leaves the wallet."

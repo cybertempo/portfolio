@@ -1,0 +1,17 @@
+name = "Anthropic API"
+tagline = "Programmatic access to Claude models: send messages, get completions, call tools."
+pro = [
+  "The Anthropic API exposes the Claude models over HTTPS. The core endpoint is **Messages**: you send a conversation (a system prompt plus alternating user and assistant turns) and receive the model's next turn. It supports streaming, structured outputs, vision, and **tool use** — you describe functions your code can run, the model returns a request to call one with arguments, your code runs it and returns the result, and the model continues. That loop is how agents are built.",
+  "**How it is used well.** Cost and latency scale with tokens, so the engineering is in what you send: a tight system prompt, only the context that matters, and a cheap gate in front of the model so trivial cases never reach it. Prompt caching cuts the cost of repeated context; batch processing halves it for offline work. Outputs are probabilistic — validate them (schemas, allowed values) before acting on them, and log what was asked and answered.",
+  "**Trade-offs.** A network dependency and a per-token bill, in exchange for capability no local model on a laptop matches. Sensitive data leaves your machine, so what goes into a prompt is a data-handling decision. Model versions change; pin the model id and re-test on upgrade.",
+  "**Here.** CommitBot uses the Messages API for semantic classification and deadline extraction: a regex pre-filter decides which Slack messages might contain a commitment, and only those are sent to Claude with a schema-constrained prompt — keeping calls cheap and false positives low. Claude Code, which built this site, is the same models driven through an agent loop.",
+]
+noob = [
+  "An API is a way for your program to ask another service for help. The Anthropic API lets your code send a message to Claude and get an answer back, just like chatting, but automatically and thousands of times.",
+  "You pay by the amount of text sent and received, so good programs are careful to ask only when it matters — CommitBot first checks with a cheap rule whether a message even looks like a promise, and only then asks Claude: \"is this a commitment, and when is it due?\"",
+  "The same models, driven in a loop where they can run tools, are what \"AI agents\" are.",
+]
+[diagram]
+kind = "flow"
+items = ["Your app", "POST /v1/messages", "Claude model", "Reply (or tool call)"]
+caption = "Send the conversation so far; receive the next turn."

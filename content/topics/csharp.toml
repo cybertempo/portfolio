@@ -1,0 +1,17 @@
+name = "C#"
+tagline = "Microsoft's modern, strongly typed language — the language of Unity games and .NET applications."
+pro = [
+  "C# is a statically typed, garbage-collected, object-oriented language running on .NET. It borrows Java's structure and has evolved faster: properties, LINQ (query expressions over any collection), `async`/`await` (which it introduced to the mainstream), pattern matching, records, nullable reference types and top-level statements. .NET today is cross-platform and open source; ASP.NET Core is a high-performance web framework, and Unity uses C# as its scripting language.",
+  "**How it works.** Source compiles to IL for the .NET runtime, which JIT-compiles to native code; ahead-of-time compilation exists for start-up-sensitive targets. In Unity, scripts are `MonoBehaviour` classes whose methods the engine calls per frame; the language's value types (`struct`) and control over allocation matter because garbage collection pauses are visible at 60 fps.",
+  "**Trade-offs.** Strong typing and excellent tooling (Visual Studio, Rider) make large codebases tractable; the ecosystem is more Microsoft-centred than Java's or Python's, though far less so than it was. Within games, the discipline is avoiding per-frame allocations and understanding what the engine does between your `Update` calls.",
+  "**Here.** C# is the language of the multiplayer narrative game's gameplay, multiplayer systems and LLM integration in Unity.",
+]
+noob = [
+  "C# (say \"C sharp\") is a language a lot like Java: precise, checked before it runs, and good for big programs. Microsoft made it, and it now runs on every kind of computer.",
+  "If you make a game in Unity, this is what you write the game's brain in — the rules for what happens when things touch, when the player presses a key, when the AI decides to speak.",
+  "The multiplayer game on this site is written in it.",
+]
+[diagram]
+kind = "flow"
+items = ["C# script", "Compiled by .NET", "Runs inside Unity", "Game behaviour"]
+caption = "Scripts compile once and run every frame inside the engine."

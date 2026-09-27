@@ -1,0 +1,17 @@
+name = "restic"
+tagline = "Encrypted, deduplicated backups to almost any storage, with restores you can actually test."
+pro = [
+  "restic is a backup program that treats a backup as a **repository** of encrypted, content-addressed chunks. Files are split with a rolling hash into variable-size blocks; each block is hashed, encrypted (AES-256 with Poly1305-AES authentication) and stored once, however many files or snapshots contain it. A **snapshot** is a tree pointing at blocks, so daily backups cost only the changed data, and any snapshot restores completely.",
+  "**How it is operated.** `restic backup` creates a snapshot; `forget` with a retention policy marks old snapshots; `prune` reclaims unreferenced blocks; `check` verifies the repository's integrity, optionally reading back a sample of data. Back ends include local disk, SFTP, S3-compatible object storage and rclone (which reaches nearly any cloud). Everything is encrypted before it leaves the machine, so the storage provider sees only ciphertext.",
+  "**Trade-offs and the rules that matter.** The repository password is the whole game: lose it and the backup is noise — it belongs in the password manager. A backup that has never been restored is a hope; the drill matters more than the schedule. Pruning after a failed backup can destroy the only good copy, so a failed step must fail the pipeline. Databases need a consistent dump or snapshot, not a copy of live files.",
+  "**Here.** The personal server's backup takes database-consistent snapshots, runs as the owner rather than root, prunes only after a verified success, keeps an off-site copy, and has been restored onto a clean machine to prove that the documents plus two stores (password manager, cloud folder) are enough to rebuild everything — the lab's reproducibility rule, tested.",
+]
+noob = [
+  "A backup is a spare copy of everything important, kept somewhere else, in case the original is lost. restic makes those copies, scrambles them so only you can read them, and only stores the parts that changed since last time — so a year of daily backups isn't 365 full copies.",
+  "The most important rule: a backup you've never tried to restore might not work. So you practise the restore before you need it — on this server, the whole machine was rebuilt from backups once, on purpose, to prove it.",
+  "The one thing you must never lose is the backup's password. Without it the backup is just noise — which is exactly what makes it safe to keep anywhere.",
+]
+[diagram]
+kind = "flow"
+items = ["Files + database", "Chunk & encrypt", "Repository (off-site)", "Restore drill"]
+caption = "Encrypted before it leaves the machine; proven by restoring it."

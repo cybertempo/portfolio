@@ -1,0 +1,17 @@
+name = "Vitest"
+tagline = "A fast test runner for JavaScript projects, built to work with Vite."
+pro = [
+  "Vitest is a unit and component test runner that reuses a project's Vite configuration, so tests see exactly the same module resolution, transforms and aliases as the application. Its API is Jest-compatible (`describe`, `it`, `expect`, mocks, snapshots), it runs tests in parallel workers with smart file watching, and it reports coverage. With React Testing Library it tests components the way a user experiences them — by role, label and text, not by implementation details.",
+  "**How it works.** Test files import the code under test; Vitest transforms them through Vite's pipeline and executes them in Node with jsdom or happy-dom simulating the browser. Watch mode re-runs only the tests affected by a change. Mocking (`vi.fn`, `vi.mock`) isolates units from network and time. A test is only valuable if it can fail: the first run of a new test should be red.",
+  "**Trade-offs.** Simulated DOMs are not browsers — layout, CSS and real events need Playwright or Cypress for end-to-end coverage. Tests coupled to implementation break on every refactor; tests written against behaviour survive. The right mix is many fast unit tests, a few component tests, and a handful of end-to-end checks on the paths that matter.",
+  "**Here.** WebYes Shop has 32 Vitest tests over forms, cart logic (quantities per variant, persistence) and product flows, with React Testing Library — and CommitBot, in Python, applies the same philosophy with 137 tests. This site's own build applies it to its gates: each is fire-tested against an input it must refuse.",
+]
+noob = [
+  "Tests are small programs that check your program: \"if I add two of the same shoe to the cart, is the quantity 2?\" Vitest runs all of them in a second and tells you which ones failed.",
+  "The point is to know something broke before a real user does — and to be able to change the code fearlessly, because the tests will shout if you break something.",
+  "A good test must be able to fail. If it passes no matter what, it isn't testing anything. The shopping platform has 32 of them.",
+]
+[diagram]
+kind = "flow"
+items = ["Change code", "vitest runs 32 tests", "All green?", "Ship / fix"]
+caption = "Every change is checked against everything that used to work."

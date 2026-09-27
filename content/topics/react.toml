@@ -1,0 +1,18 @@
+name = "React"
+aliases = ["React 18", "React.js"]
+tagline = "A JavaScript library for building user interfaces out of components that re-render when their data changes."
+pro = [
+  "React is a library for building UIs as a tree of **components**: functions that take props and return what should be on screen (JSX). The core idea is that the UI is a pure function of state — when state changes, React re-runs the affected components, computes the difference against the previous output (reconciliation), and applies the minimal set of DOM updates. Hooks (`useState`, `useEffect`, `useContext`, `useMemo`) give function components state and side effects.",
+  "**How it works.** Rendering is declarative: you never say \"add this element\", you say \"given this state, the screen looks like this\". React 18 added concurrent rendering (interruptible work, transitions for non-urgent updates) and automatic batching of state updates. Data flows down through props; events flow up through callbacks; shared state lives in Context or a store. Routing, data fetching and styling are ecosystem choices, not React itself.",
+  "**Trade-offs.** The mental model is simple, the pitfalls are specific: effects that run more often than intended, stale closures, unnecessary re-renders from unstable props, and putting derived data in state. Bundle size and hydration cost matter on slow devices, which is why frameworks such as Next.js render on the server first. For a page with little interaction, plain HTML and a little JavaScript is often the better tool.",
+  "**Here.** WebYes Shop (React 18, Vite, Router, Context, 32 Vitest tests) and SmartPact's front end are React; the blockchain desktop app is React inside Electron. This site deliberately is not — its content is static and a framework would cost more than it gave.",
+]
+noob = [
+  "A web page built with React is made of **components** — a button, a product card, a shopping cart — like LEGO bricks that each know how to draw themselves and can be reused anywhere.",
+  "When something changes (you add an item to the cart), React works out exactly which bricks need redrawing and redraws only those. You describe what the page should look like for any situation; React keeps the screen matching it.",
+  "It's the most widely used way to build web apps, made by Facebook and used by most big sites. The shopping platform on this site is built with it.",
+]
+[diagram]
+kind = "flow"
+items = ["State changes", "Components re-render", "React diffs", "DOM updated"]
+caption = "UI = f(state): change the state, and the screen follows."
