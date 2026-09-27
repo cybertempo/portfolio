@@ -4,16 +4,22 @@
 Run through scripts/build.sh. Standard library only (Python ≥ 3.11).
 
 What it does, in order:
-  1. loads and validates content/site.toml — an invalid field refuses the
-     whole render; nothing is produced half-right (RULES 3.3);
-  2. fire-tests every gate against a synthetic bad fixture, so a gate that
-     has silently stopped working fails the build (RULES 2.2);
-  3. renders src/index.html with the content, copies src/ static files,
-     writes the host header files (one header set, two formats);
-  4. runs the gates over dist/: no secret-shaped string, no forbidden name,
-     no external script/style/font/image, every local asset present;
-  5. prints a report: hidden links (empty urls) and the output hash, and
-     writes dist/.build.json for scripts/verify-live.sh.
+  1. fire-tests the content-shape, url, secret, name, external-resource,
+     colour, explainer and asset gates against synthetic bad fixtures (each
+     must refuse) and a clean one (each must pass), so a gate that has silently stopped
+     working fails the build (RULES 2.2);
+  2. loads content/site.toml and checks the shape of every field — an invalid
+     field refuses the whole render; nothing is produced half-right (RULES 3.3);
+  3. renders src/index.html with the content into dist.candidate/, copies
+     src/ static files, writes the host header files (one header set, two
+     formats);
+  4. runs the gates over dist.candidate/: no secret-shaped string, no
+     forbidden name, no external resource, no colour literal, every local
+     asset present;
+  5. writes .build.json (for scripts/verify-live.sh) into the candidate and
+     only then swaps it in as dist/. A refusal anywhere deletes the candidate
+     and leaves the previous dist/ untouched;
+  6. prints a report: hidden links (empty urls) and the output hash.
 """
 from __future__ import annotations
 
@@ -25,6 +31,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import tomllib
 from pathlib import Path
 
@@ -32,6 +39,10 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "content" / "site.toml"
 SRC = ROOT / "src"
 DIST = ROOT / "dist"
+# A build renders into CANDIDATE and gates it there; only a candidate that
+# passed every gate replaces DIST. OLD holds the previous dist/ during the swap.
+CANDIDATE = ROOT / "dist.candidate"
+OLD = ROOT / "dist.old"
 TONES = ("primary", "secondary", "tertiary", "success", "warning", "danger", "muted")
 BADGE_TONES = TONES[:6]
 TOPICS = ROOT / "content" / "topics"
@@ -39,6 +50,7 @@ PALETTES = ROOT / "content" / "palettes"
 PALETTE_KEYS = ("bg", "bg2", "panel", "panel2", "text", "muted", "faint", "stroke",
                 "primary", "secondary", "tertiary", "success", "warning", "danger")
 TEXT_SUFFIXES = {".html", ".css", ".js", ".json", ".svg", ".txt", ".toml", ".md"}
+EXTERNAL_SUFFIXES = {".html", ".css", ".js", ".svg"}
 
 
 class Refuse(SystemExit):
@@ -70,9 +82,12 @@ SECRET_PATTERNS = {
     "AWS access key": re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
     "OpenAI/Anthropic-style key": re.compile(r"\bsk-(?:ant-)?[A-Za-z0-9_-]{20,}\b"),
     "GitHub token": re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b"),
+    "GitHub fine-grained token": re.compile(r"\bgithub_pat_[A-Za-z0-9_]{22,}"),
+    "Slack token": re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}"),
+    "Google API key": re.compile(r"\bAIza[0-9A-Za-z_-]{35}(?![0-9A-Za-z_-])"),
     "JWT": re.compile(r"\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b"),
     "password/token assignment": re.compile(r"(?i)\b(password|passwd|secret|api[_-]?key|token)\s*[:=]\s*['\"]?[^\s'\"<]{8,}"),
-    "long hex string": re.compile(r"(?<![A-Za-z0-9])[0-9a-f]{40,}(?![A-Za-z0-9])"),
+    "long hex string": re.compile(r"(?<![A-Za-z0-9])(?:[0-9a-f]{40,}|[0-9A-F]{40,})(?![A-Za-z0-9])"),
 }
 # The owner's first name is Sreenandan. The shortened form must never appear
 # on its own — "Sreenandan" contains it, so a lookbehind excludes that.
@@ -80,10 +95,18 @@ FORBIDDEN_NAME = re.compile(r"(?i)(?<![a-z])nandan(?![a-z])")
 # Anything the browser would fetch from another origin. Visitor-facing <a href>
 # links are allowed; resources are not.
 EXTERNAL_RESOURCE = re.compile(
-    r"(?i)(?:<(?:script|link|img|source|iframe|video|audio|object|embed)\b[^>]*?\b(?:src|href)\s*=\s*['\"]?\s*(?:https?:)?//)"
+    # a src/href (xlink:href included) on an element that loads what it names
+    r"(?i)(?:<(?:script|link|img|image|source|iframe|video|audio|object|embed)\b[^>]*?\b(?:src|href)\s*=\s*['\"]?\s*(?:https?:)?//)"
+    # any entry of a srcset; a video poster
+    r"|(?:\bsrcset\s*=\s*(?:\"[^\"]*?|'[^']*?|)(?:https?:)?//)"
+    r"|(?:\bposter\s*=\s*['\"]?\s*(?:https?:)?//)"
     r"|(?:url\(\s*['\"]?\s*(?:https?:)?//)"
     r"|(?:@import\s+['\"]?\s*(?:https?:)?//)"
-    r"|(?:\bfetch\s*\(|\bnew\s+XMLHttpRequest\b|\bnavigator\.sendBeacon\b|\bimport\s*\(\s*['\"](?:https?:)?//)"
+    # module imports, static and dynamic
+    r"|(?:\bimport\s*(?:[\w$*{},\s]+?\s*from\s*)?['\"](?:https?:)?//)"
+    r"|(?:\bimport\s*\(\s*['\"](?:https?:)?//)"
+    # network APIs: refused whatever the address, the site makes no requests
+    r"|(?:\bfetch\s*\(|\bnew\s+(?:XMLHttpRequest|WebSocket|EventSource)\b|\bnavigator\.sendBeacon\b)"
 )
 
 
@@ -106,24 +129,207 @@ def scan_external(text: str) -> bool:
     return bool(EXTERNAL_RESOURCE.search(CANONICAL_LINK.sub("", text)))
 
 
+# Colours are written only in content/palettes/. A stylesheet may use black,
+# white and the two print-stylesheet greys (#ccc borders, #222 body text)
+# directly: ink on paper, not palette colours.
+NEUTRAL_HEX = {"#000", "#fff", "#000000", "#ffffff", "#ccc", "#222"}
+CSS_COMMENT = re.compile(r"/\*.*?\*/", re.S)
+CSS_BLOCK = re.compile(r"\{([^{}]*)\}")          # innermost blocks hold only declarations
+CSS_URL = re.compile(r"url\([^)]*\)", re.I)
+HEX_COLOUR = re.compile(r"(?<![\w&-])#(?:[0-9a-fA-F]{8}|[0-9a-fA-F]{6}|[0-9a-fA-F]{3,4})(?![\w-])")
+RGB_COLOUR = re.compile(r"(?i)\brgba?\(\s*([\d.]+%?)[\s,]+([\d.]+%?)[\s,]+([\d.]+%?)[^)]*\)")
+HSL_COLOUR = re.compile(r"(?i)\bhsla?\([^)]*\)")
+
+
+def colour_literals(css: str) -> list[str]:
+    """Colours written directly in declaration values (never selectors, so an
+    id like #fab is not a colour). rgb()/rgba() of black or white, at any
+    alpha, and NEUTRAL_HEX are allowed."""
+    found = []
+    for block in CSS_BLOCK.findall(CSS_COMMENT.sub("", css)):
+        for decl in block.split(";"):
+            if ":" not in decl:
+                continue
+            value = CSS_URL.sub("", decl.split(":", 1)[1])
+            found += [h for h in HEX_COLOUR.findall(value) if h.lower() not in NEUTRAL_HEX]
+            for m in RGB_COLOUR.finditer(value):
+                channels = {c.rstrip("%") for c in m.groups()}
+                if channels not in ({"0"}, {"255"}):
+                    found.append(m.group(0))
+            found += HSL_COLOUR.findall(value)
+    return found
+
+
+def refuse_colour_literals(css: str) -> None:
+    if (lit := colour_literals(css)):
+        raise Refuse(f"stylesheet: colour literals found — use palette variables instead: {sorted(set(lit))[:8]}")
+
+
+# Local files a page refers to: src/href in double or single quotes, and every
+# srcset entry. In-page anchors, mail, data: and other origins are not files.
+ASSET_ATTR = re.compile(r"""(?:src|href)=(?:"([^"#]+)|'([^'#]+))""")
+SRCSET_ATTR = re.compile(r"""srcset=(?:"([^"]*)"|'([^']*)')""")
+NOT_A_FILE = re.compile(r"(?i)^(?:mailto:|https?:|data:|//)")
+
+
+def page_refs(text: str) -> list[str]:
+    refs = [a or b for a, b in ASSET_ATTR.findall(text)]
+    for a, b in SRCSET_ATTR.findall(text):
+        refs += [entry.split()[0] for entry in (a or b).split(",") if entry.strip()]
+    return [r for r in refs if not NOT_A_FILE.match(r)]
+
+
+def missing_assets(root: Path) -> tuple[list[str], int, int]:
+    """(missing files, referenced files, pages) for the site under root: page
+    references resolve from their page; stylesheet url()s from the root
+    (style.css, photo.css, minimap.css); fonts.css url()s from its folder."""
+    pages = sorted(root.rglob("*.html"))
+    refs: set[Path] = set()
+    for page in pages:
+        refs |= {(page.parent / r).resolve() for r in page_refs(page.read_text(encoding="utf-8"))}
+    css = "\n".join((root / n).read_text(encoding="utf-8") for n in ("style.css", "photo.css", "minimap.css") if (root / n).is_file())
+    refs |= {(root / m.strip("'\"")).resolve() for m in re.findall(r"url\(([^)]+)\)", css) if not m.startswith(("data:", "\"data:", "'data:"))}
+    fonts = root / "assets" / "fonts" / "fonts.css"
+    if fonts.is_file():
+        refs |= {(fonts.parent / m).resolve() for m in re.findall(r"url\(([^)]+\.woff2)\)", fonts.read_text())}
+    missing = sorted({str(r.relative_to(root.resolve())) if r.is_relative_to(root.resolve()) else str(r) for r in refs if not r.is_file()})
+    return missing, len(refs), len(pages)
+
+
+def claim_topic_names(lookup: dict, slug: str, names: list, where: str) -> None:
+    """Record that topic `slug` explains each of `names` (case-insensitive).
+    A name another topic already claims refuses."""
+    for key in names:
+        if not isinstance(key, str) or not key.strip():
+            raise Refuse(f"{where}: name and aliases must be non-empty text, got {key!r}")
+        k = key.lower()
+        if k in lookup and lookup[k] != slug:
+            raise Refuse(f"{where}: '{key}' is already claimed by topics/{lookup[k]}.toml")
+        lookup[k] = slug
+
+
+def explainer_slug(name: str, lookup: dict, unexplained: list[str]) -> str | None:
+    """The explainer page for a chip or badge; one without is recorded."""
+    slug = lookup.get(name.lower())
+    if not slug:
+        unexplained.append(name)
+    return slug
+
+
+def refuse_unexplained(unexplained: list[str]) -> None:
+    if unexplained:
+        raise Refuse(f"{len(unexplained)} chip(s)/badge(s) have no explainer in content/topics/ — write one (see content/topics/_README.md) or mark the group linked = false: {', '.join(unexplained)}")
+
+
+# ── the shape of content/site.toml ──────────────────────────────────────────
+# "text" = non-empty string, "str" = any string (often "" = hidden), "number",
+# "bool"; ("list", x) = non-empty list of x; ("map", x) = table of name → x;
+# a dict = table with these keys; a key ending in "?" may be left out.
+_ENTRY = lambda *keys: {k: "text" for k in keys}
+_SECTION = lambda **items: {"tag": "text", "title": "text", **items}
+SCHEMA = {
+    "identity": {**_ENTRY("first", "last", "handle", "host", "role", "email", "location", "status", "photo"),
+                 "photo_keep_top?": "number"},
+    "design": {"palette": "text", "rain_text": "text", "minimap": "text", "ghost_text?": "str"},
+    "minimap": {**_ENTRY("title", "toggle", "start", "hint", "scrub"), "tag?": "str", "tag_tone?": "text"},
+    "meta": {"description": "text", "url?": "str", "image?": "str"},
+    "topics": _ENTRY("pro_label", "noob_label"),
+    "nav": _ENTRY("about", "skills", "projects", "experience", "achievements", "certifications", "contact"),
+    "hero": {**_ENTRY("kicker", "lead", "cta_primary", "cta_secondary", "scroll_hint"),
+             "typed": ("list", "text"), "stats": ("list", _ENTRY("value", "label"))},
+    "about": _SECTION(paragraphs=("list", "str"),
+                      terminal=("list", {"cmd": "text", "out": ("list", "str")})),
+    "skills": _SECTION(groups=("list", {"title": "text", "items": ("list", "text"), "linked?": "bool"})),
+    "projects": _SECTION(
+        archive_label="text",
+        featured=("list", {"domains": ("list", "text"), "tone": "text", "url?": "str", "title": "text",
+                           "note?": "str", "desc": "text", "stack": ("list", "text"), "links": ("map", "str")}),
+        archive=("list", _ENTRY("title", "desc"))),
+    "experience": _SECTION(entries=("list", _ENTRY("date", "role", "org", "desc"))),
+    "achievements": _SECTION(items=("list", _ENTRY("icon", "big", "title", "desc"))),
+    "certifications": _SECTION(items=("list", {"title": "text", "issuer": "text", "url?": "str"})),
+    "contact": _SECTION(blurb="text", email_label="text", links=("map", "str"),
+                        **{"resume?": "str", "resume_label?": "text"}),
+    "footer": {"line": "text"},
+}
+
+
+def check_shape(v, spec, where: str) -> None:
+    """Refuse, naming the field, if v does not have the shape spec describes."""
+    if spec == "text":
+        if not isinstance(v, str) or not v.strip():
+            raise Refuse(f"{where}: must be non-empty text, got {v!r}")
+    elif spec == "str":
+        if not isinstance(v, str):
+            raise Refuse(f"{where}: must be text (\"\" is allowed), got {v!r}")
+    elif spec == "number":
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            raise Refuse(f"{where}: must be a number, got {v!r}")
+    elif spec == "bool":
+        if not isinstance(v, bool):
+            raise Refuse(f"{where}: must be true or false, got {v!r}")
+    elif isinstance(spec, tuple) and spec[0] == "list":
+        if not isinstance(v, list) or not v:
+            raise Refuse(f"{where}: must be a non-empty list, got {v!r}")
+        for i, item in enumerate(v):
+            check_shape(item, spec[1], f"{where}[{i}]")
+    elif isinstance(spec, tuple) and spec[0] == "map":
+        if not isinstance(v, dict):
+            raise Refuse(f"{where}: must be a table, got {v!r}")
+        for k, item in v.items():
+            check_shape(item, spec[1], f"{where}.{k}")
+    else:
+        if not isinstance(v, dict):
+            raise Refuse(f"{where or 'content'}: must be a table, got {v!r}")
+        for key, sub in spec.items():
+            k = key.rstrip("?")
+            if k not in v:
+                if key.endswith("?"):
+                    continue
+                raise Refuse(f"{where or 'content'}: missing '{k}'")
+            check_shape(v[k], sub, f"{where}.{k}" if where else k)
+
+
+def validate_content(c: dict) -> None:
+    check_shape(c, SCHEMA, "")
+
+
+def sample_of(spec):
+    """The smallest value of the given shape: the clean fixture for check_shape."""
+    if spec in ("text", "str"):
+        return "x"
+    if spec == "number":
+        return 1.0
+    if spec == "bool":
+        return True
+    if isinstance(spec, tuple):
+        return [sample_of(spec[1])] if spec[0] == "list" else {"Label": sample_of(spec[1])}
+    return {k.rstrip("?"): sample_of(sub) for k, sub in spec.items()}
+
+
 def fire_test_gates() -> None:
     """Each gate must refuse a synthetic bad input and pass a clean one."""
-    bad_secrets = {
+    bad_secrets = [
         # Built at run time, never written whole: a public repository's secret
         # scanner would otherwise flag this file for the fixtures that prove
         # the gate works (27 Sep 2026).
-        "private key block": "-----BEGIN RSA " + "PRIVATE KEY-----",
-        "AWS access key": "AKIA" + "IOSFODNN7EXAMPLE",
-        "OpenAI/Anthropic-style key": "sk-" + "ant-abcdefghijklmnopqrstuvwxyz0123",
-        "GitHub token": "ghp_" + "a" * 36,
-        "JWT": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0In0.abcdefghijklmnop",
-        "password/token assignment": "password = hunter22222",
-        "long hex string": "d" * 40,
-    }
-    for name, fixture in bad_secrets.items():
+        ("private key block", "-----BEGIN RSA " + "PRIVATE KEY-----"),
+        ("AWS access key", "AKIA" + "IOSFODNN7EXAMPLE"),
+        ("OpenAI/Anthropic-style key", "sk-" + "ant-" + "abcdefghijklmnopqrstuvwxyz0123"),
+        ("GitHub token", "ghp_" + "a" * 36),
+        ("GitHub fine-grained token", "github_" + "pat_" + "A1b2C3d4" * 3 + "_" + "e5F6" * 14),
+        ("Slack token", "xox" + "b-" + "1234567890" + "-" + "abcdefghijkl"),
+        ("Google API key", "AI" + "za" + "Sy" + "B" * 33),
+        ("JWT", "eyJ" + "hbGciOiJIUzI1NiJ9" + "." + "eyJ" + "zdWIiOiIxMjM0In0" + "." + "abcdefghijklmnop"),
+        ("password/token assignment", "pass" + "word = " + "hunter" + "22222"),
+        ("long hex string", "d" * 40),
+        ("long hex string", "D" * 40),
+    ]
+    for name, fixture in bad_secrets:
         if scan_secrets(fixture) != name:
             raise Refuse(f"secret gate broken: '{name}' pattern did not catch its fixture")
-    clean = "password for sreenandan: ********  AIR 5691 of 170,825  https://example.org/x"
+    clean = ("password for sreenandan: ********  AIR 5691 of 170,825  https://example.org/x  "
+             "737265656E616E64616E2070726164656570  xoxo  AIza  github_pat")
     if scan_secrets(clean):
         raise Refuse(f"secret gate broken: false positive on clean fixture ({scan_secrets(clean)})")
 
@@ -141,14 +347,102 @@ def fire_test_gates() -> None:
         "@import 'https://x.test/a.css';",
         "fetch('https://api.example.com')",
         '<img src="http://x.test/a.png">',
+        '<img srcset="assets/a.webp 1x, https://x.test/b.webp 2x" alt="">',
+        "<source srcset='//x.test/a.webp'>",
+        '<video poster="https://x.test/p.png"></video>',
+        '<svg><image href="https://x.test/a.png"/></svg>',
+        '<svg><image xlink:href="//x.test/a.png"/></svg>',
+        'import { a } from "https://x.test/m.js";',
+        "import 'https://x.test/side-effect.js';",
+        'const ws = new WebSocket("wss://x.test/");',
+        'const es = new EventSource("/events");',
     ]
     for f in bad_ext:
         if not scan_external(f):
             raise Refuse(f"external-resource gate broken: did not catch {f!r}")
-    clean_ext = '<a href="https://github.com/x">GitHub</a> url(assets/fonts/x.woff2) <img src="assets/p.webp"> <link rel="canonical" href="https://example.org/">'
+    clean_ext = ('<a href="https://github.com/x">GitHub</a> url(assets/fonts/x.woff2) <img src="assets/p.webp"> '
+                 '<link rel="canonical" href="https://example.org/"> <img srcset="assets/a.webp 1x, assets/b.webp 2x"> '
+                 '<svg xmlns="http://www.w3.org/2000/svg"><image href="assets/a.png"/></svg> '
+                 '<video poster="assets/p.png"></video> import { a } from "./m.js"; "an important point from https://x.test"')
     if scan_external(clean_ext):
         raise Refuse("external-resource gate broken: false positive on local references")
-    print("gate: fire tests      ok (secrets ×%d, name, external resources)" % len(bad_secrets))
+
+    bad_css = [".a{color:#123456}", ".a{color:#f0a}", ".a{color:#f0a8}", ".a{color:#11223344}",
+               ".a{color:hsl(10 50% 50%)}", ".a{color:hsla(10,50%,50%,.5)}", ".a{color:rgb(10 20 30)}",
+               ".a{color:rgba(10,20,30,.5)}", "@media print{.a{border:1px solid #abc}}"]
+    for f in bad_css:
+        if not colour_literals(f):
+            raise Refuse(f"colour gate broken: did not catch {f!r}")
+    clean_css = ("#fab,#c0ffee .x:not(#abc){color:var(--primary);background:rgba(var(--primary-rgb),.5)}"
+                 " .b{color:#000;border-color:#fff;fill:#000000;stroke:#ffffff;box-shadow:0 0 1px rgba(0,0,0,.4),0 0 2px rgb(255 255 255 / .1)}"
+                 " @media print{.c{border-color:#ccc;color:#222}} .d{marker-end:url(#fab)} /* #123456 in a comment */")
+    if colour_literals(clean_css):
+        raise Refuse(f"colour gate broken: false positive on clean fixture ({colour_literals(clean_css)})")
+
+    with tempfile.TemporaryDirectory(prefix="render-fire-test-") as tmp:
+        root = Path(tmp)
+        (root / "index.html").write_text(
+            '<link href="style.css"><img src=\'a.png\'><img srcset="b.png 1x, c.png 2x">'
+            '<a href="#top"></a><a href="https://x.test/">x</a><a href="mailto:a@b.test">m</a>')
+        (root / "style.css").write_text(".x{background:url(d.png)}")
+        missing, _, _ = missing_assets(root)
+        if missing != ["a.png", "b.png", "c.png", "d.png"]:
+            raise Refuse(f"asset gate broken: expected a.png, b.png, c.png and d.png missing, got {missing}")
+        for name in ("a.png", "b.png", "c.png", "d.png"):
+            (root / name).write_bytes(b"")
+        if missing_assets(root)[0]:
+            raise Refuse(f"asset gate broken: false positive when every file exists ({missing_assets(root)[0]})")
+
+    def refuses(fn, *args) -> bool:
+        try:
+            fn(*args)
+        except Refuse:
+            return True
+        return False
+
+    for u in ("http://example.org/", "javascript:alert(1)", "https://x.test/a b", "//x.test/", 5):
+        if not refuses(check_url, u, "fixture"):
+            raise Refuse(f"url gate broken: accepted {u!r}")
+    if refuses(check_url, "https://example.org/x?y=1", "fixture") or refuses(check_url, "", "fixture"):
+        raise Refuse("url gate broken: refused an https:// url or an empty one")
+
+    lookup: dict = {}
+    claim_topic_names(lookup, "git", ["Git", "git", "version control"], "fixture")
+    claim_topic_names(lookup, "python", ["Python"], "fixture")
+    if not refuses(claim_topic_names, lookup, "git-again", ["GIT"], "fixture"):
+        raise Refuse("duplicate-explainer gate broken: a second topic claimed 'Git'")
+
+    unexplained: list[str] = []
+    for name in ("Python", "git", "Cobol"):
+        explainer_slug(name, lookup, unexplained)
+    if unexplained != ["Cobol"] or not refuses(refuse_unexplained, unexplained):
+        raise Refuse(f"missing-explainer gate broken: recorded {unexplained} for Python, git, Cobol")
+    if refuses(refuse_unexplained, []):
+        raise Refuse("missing-explainer gate broken: refused when every item has an explainer")
+
+    good = sample_of(SCHEMA)
+    if refuses(validate_content, good):
+        raise Refuse("content-shape gate broken: refused a well-formed sample")
+    bad_shapes = []
+    for path, value in ((("identity", "location"), None), (("identity", "location"), 5),
+                        (("projects", "featured", 0, "domains"), [1]), (("contact", "links", "Label"), 5),
+                        (("hero", "stats"), "x"), (("identity", "photo_keep_top"), "0.3"),
+                        (("skills", "groups", 0, "linked"), "no"), (("footer",), None)):
+        doc = json.loads(json.dumps(good))
+        target = doc
+        for k in path[:-1]:
+            target = target[k]
+        if value is None:
+            del target[path[-1]]
+        else:
+            target[path[-1]] = value
+        if not refuses(validate_content, doc):
+            bad_shapes.append(".".join(map(str, path)))
+    if bad_shapes:
+        raise Refuse(f"content-shape gate broken: accepted a missing or wrong-typed {', '.join(bad_shapes)}")
+
+    print("gate: fire tests      ok (secrets ×%d, name, external ×%d, colours ×%d, assets, urls, explainers, content shape)"
+          % (len(bad_secrets), len(bad_ext), len(bad_css)))
 
 
 # ── the photo ───────────────────────────────────────────────────────────────
@@ -320,7 +614,7 @@ def need(d: dict, key: str, where: str, typ=str):
 def check_url(u: str, where: str, allow_empty=True) -> str:
     if u == "" and allow_empty:
         return ""
-    if not re.fullmatch(r"https://[^\s\"'<>]+", u):
+    if not isinstance(u, str) or not re.fullmatch(r"https://[^\s\"'<>]+", u):
         raise Refuse(f"{where}: url must start with https:// (or be \"\" to hide it), got {u!r}")
     return u
 
@@ -341,12 +635,10 @@ def chips(items: list, where: str, topics: dict | None, unlinked: list[str]) -> 
         raise Refuse(f"{where}: items must be non-empty strings")
     out = []
     for i in items:
-        slug = topics.get(i.lower()) if topics is not None else None
+        slug = explainer_slug(i, topics, unlinked) if topics is not None else None
         if slug:
             out.append(f'<li><a class="chip" href="topics/{slug}.html" target="_blank" rel="noopener">{plain(i, where)}</a></li>')
         else:
-            if topics is not None:
-                unlinked.append(i)
             out.append(f'<li class="chip">{plain(i, where)}</li>')
     return '<ul class="chips">' + "".join(out) + "</ul>"
 
@@ -372,11 +664,10 @@ def load_topics() -> tuple[dict, dict]:
         if len(items) < 2 or any(len(i) > 26 for i in items):
             raise Refuse(f"{w}.diagram.items: 2+ labels of at most 26 characters")
         need(d, "caption", w + ".diagram")
-        for key in (tp["name"], *tp.get("aliases", [])):
-            k = key.lower()
-            if k in lookup and lookup[k] != slug:
-                raise Refuse(f"{w}: '{key}' is already claimed by topics/{lookup[k]}.toml")
-            lookup[k] = slug
+        aliases = tp.get("aliases", [])
+        if not isinstance(aliases, list):
+            raise Refuse(f"{w}.aliases: must be a list of names")
+        claim_topic_names(lookup, slug, [tp["name"], *aliases], w)
         by_slug[slug] = tp
     return by_slug, lookup
 
@@ -550,13 +841,12 @@ def render(c: dict) -> tuple[str, list[str], list[str], dict[str, str]]:
             raise Refuse(f"{w}.tone: must be one of {BADGE_TONES}, got {tone!r}")
         badges = []
         for dm in need(p, "domains", w, list):
-            if (dslug := topic_lookup.get(dm.lower())):
+            if (dslug := explainer_slug(dm, topic_lookup, unlinked)):
                 badges.append(f'<a class="proj-badge b-{tone}" href="topics/{dslug}.html" target="_blank" rel="noopener">{plain(dm, f"{w}.domains")}</a>')
                 used_in.setdefault(dslug, [])
                 if p["title"] not in used_in[dslug]:
                     used_in[dslug].append(p["title"])
             else:
-                unlinked.append(dm)
                 badges.append(f'<span class="proj-badge b-{tone}">{plain(dm, f"{w}.domains")}</span>')
         badges = "".join(badges)
         title_url = check_url(p.get("url", ""), f"{w}.url")
@@ -761,7 +1051,9 @@ MINIMAP: dict = {}
 MAP_VARS = ""
 
 
-def write_dist(index_html: str, topic_pages: dict[str, str]) -> None:
+def write_dist(index_html: str, topic_pages: dict[str, str], out: Path | None = None) -> None:
+    """Write the site into `out` (default DIST), replacing whatever is there."""
+    DIST = out or globals()["DIST"]
     if DIST.exists():
         shutil.rmtree(DIST)
     DIST.mkdir()
@@ -787,7 +1079,9 @@ def write_dist(index_html: str, topic_pages: dict[str, str]) -> None:
     (DIST / "robots.txt").write_text("User-agent: *\nAllow: /\n")
 
 
-def gate_dist() -> None:
+def gate_dist(out: Path | None = None) -> None:
+    """Every gate over the written site in `out` (default DIST)."""
+    DIST = out or globals()["DIST"]
     text_files = [p for p in DIST.rglob("*") if p.is_file() and p.suffix in TEXT_SUFFIXES]
     for p in text_files + [CONTENT, SRC / "index.html", SRC / "style.css", SRC / "app.js"]:
         t = p.read_text(encoding="utf-8")
@@ -796,35 +1090,25 @@ def gate_dist() -> None:
             raise Refuse(f"{rel}: contains a secret-shaped string ({hit})")
         if scan_name(t):
             raise Refuse(f"{rel}: contains the standalone name; use the full first name")
-        if p.suffix in {".html", ".css", ".js"} and scan_external(t):
+        if p.suffix in EXTERNAL_SUFFIXES and scan_external(t):
             raise Refuse(f"{rel}: references a resource on another origin; the site must be self-contained")
     print("gate: secrets         ok (%d text files)" % (len(text_files) + 4))
     print("gate: name            ok")
     print("gate: self-contained  ok")
 
     pages = sorted(DIST.rglob("*.html"))
-    css = "\n".join((DIST / name).read_text(encoding="utf-8") for name in ("style.css", "photo.css", "minimap.css"))
-    src_css = (SRC / "style.css").read_text(encoding="utf-8") + MINIMAP["style.css"]
-    if (lit := re.findall(r"#[0-9a-fA-F]{6}\b|rgba?\((?!var\()\d+,\s*\d+,\s*\d+(?!,\s*\d+\))", src_css)):
-        lit = [x for x in lit if x.lower() not in ("#000000", "#ffffff", "rgba(0,0,0", "rgba(255,255,255")]   # neutral shadows/tints are not palette
-        if lit:
-            raise Refuse(f"stylesheet: colour literals found — use palette variables instead: {sorted(set(lit))[:8]}")
-    refs: set[Path] = set()
+    refuse_colour_literals((SRC / "style.css").read_text(encoding="utf-8") + "\n" + MINIMAP["style.css"])
     for page in pages:
         text = page.read_text(encoding="utf-8")
-        for r in re.findall(r"(?:src|href)=\"(?!#|mailto:|https?:)([^\"#]+)(?:#[^\"]*)?\"", text):
-            refs.add((page.parent / r).resolve())
         csp_meta = re.search(r'http-equiv="Content-Security-Policy" content="([^"]+)"', text)
         if not csp_meta or html.unescape(csp_meta.group(1)) != META_CSP:
             raise Refuse(f"{page.relative_to(DIST)}: CSP meta tag differs from the shared security policy")
         if re.search(r"<script(?![^>]*\bsrc=)(?![^>]*application/ld\+json)", text) or re.search(r"\son\w+=", text):
             raise Refuse(f"{page.relative_to(DIST)}: inline script or event handler found; the CSP would block it")
-    refs |= {(DIST / m.strip("'\"")).resolve() for m in re.findall(r"url\(([^)]+)\)", css) if not m.startswith(("data:", "\"data:", "'data:"))}
-    refs |= {(DIST / "assets/fonts" / m).resolve() for m in re.findall(r"url\(([^)]+\.woff2)\)", (DIST / "assets/fonts/fonts.css").read_text())}
-    missing = [str(r.relative_to(DIST)) for r in refs if not r.is_file()]
+    missing, n_refs, n_pages = missing_assets(DIST)
     if missing:
-        raise Refuse(f"referenced files missing from dist: {sorted(set(missing))}")
-    print("gate: local assets    ok (%d referenced files present, %d pages)" % (len(refs), len(pages)))
+        raise Refuse(f"referenced files missing from dist: {missing}")
+    print("gate: local assets    ok (%d referenced files present, %d pages)" % (n_refs, n_pages))
     print("gate: CSP             ok (meta on every page, no inline script)")
     # Every file copied from src/ must be byte-identical in dist/. The cloud folder has
     # handed back an empty copy before (F21): a 0-byte style.css shipped as a blank page.
@@ -850,42 +1134,77 @@ def gate_dist() -> None:
         print("gate: script syntax   SKIPPED — node not installed (RULES 2.6: a decision not to test, recorded here)")
 
 
-def dist_hash() -> str:
+def dist_hash(root: Path | None = None) -> str:
+    root = root or DIST
     h = hashlib.sha256()
-    for p in sorted(DIST.rglob("*")):
+    for p in sorted(root.rglob("*")):
         if p.is_file() and p.name != ".build.json":
-            h.update(str(p.relative_to(DIST)).encode())
+            h.update(str(p.relative_to(root)).encode())
             h.update(p.read_bytes())
     return h.hexdigest()
 
 
-def public_files() -> dict[str, str]:
+def public_files(root: Path | None = None) -> dict[str, str]:
     """Every published page/asset, excluding build and host configuration."""
-    return {p.relative_to(DIST).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in sorted(DIST.rglob('*')) if p.is_file()
+    root = root or DIST
+    return {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in sorted(root.rglob('*')) if p.is_file()
             and p.name not in {'.build.json', 'vercel.json', '_headers'}}
+
+
+def swap_into_place(candidate: Path) -> None:
+    """Replace dist/ with the gated candidate. dist/ moves to dist.old/ first
+    and comes back if the candidate cannot take its place."""
+    if OLD.exists():
+        shutil.rmtree(OLD)
+    had_dist = DIST.exists()
+    if had_dist:
+        DIST.rename(OLD)
+    try:
+        candidate.rename(DIST)
+    except BaseException:
+        if had_dist:
+            OLD.rename(DIST)
+        raise
+    if had_dist:
+        shutil.rmtree(OLD)
 
 
 def main() -> None:
     if sys.version_info < (3, 11):
         raise Refuse("Python 3.11 or newer is required (tomllib)")
+    # an interrupted swap: dist/ was moved aside and never replaced
+    if OLD.exists() and not DIST.exists():
+        OLD.rename(DIST)
+    if CANDIDATE.exists():
+        shutil.rmtree(CANDIDATE)
     fire_test_gates()
     try:
         content = tomllib.loads(CONTENT.read_text(encoding="utf-8"))
     except tomllib.TOMLDecodeError as e:
         raise Refuse(f"content/site.toml does not parse: {e}")
-    index_html, hidden, unlinked, topic_pages = render(content)
-    if unlinked:
-        raise Refuse(f"{len(unlinked)} chip(s)/badge(s) have no explainer in content/topics/ — write one (see content/topics/_README.md) or mark the group linked = false: {', '.join(unlinked)}")
-    write_dist(index_html, topic_pages)
-    gate_dist()
-    digest = dist_hash()
-    (DIST / ".build.json").write_text(json.dumps({
-        "sha256": digest, "built": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
-        "index_sha256": hashlib.sha256((DIST / "index.html").read_bytes()).hexdigest(),
-        "files": public_files(),
-    }, indent=2) + "\n")
-    size = sum(p.stat().st_size for p in DIST.rglob("*") if p.is_file())
+    validate_content(content)
+    try:
+        index_html, hidden, unlinked, topic_pages = render(content)
+    except (KeyError, TypeError, AttributeError, ValueError, IndexError) as e:
+        # the shape check above should catch these first; this is the backstop
+        raise Refuse(f"content could not be rendered — a field is missing or has the wrong type ({type(e).__name__}: {e})")
+    refuse_unexplained(unlinked)
+    try:
+        write_dist(index_html, topic_pages, CANDIDATE)
+        gate_dist(CANDIDATE)
+        digest = dist_hash(CANDIDATE)
+        (CANDIDATE / ".build.json").write_text(json.dumps({
+            "sha256": digest, "built": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"),
+            "index_sha256": hashlib.sha256((CANDIDATE / "index.html").read_bytes()).hexdigest(),
+            "files": public_files(CANDIDATE),
+        }, indent=2) + "\n")
+        size = sum(p.stat().st_size for p in CANDIDATE.rglob("*") if p.is_file())
+        swap_into_place(CANDIDATE)
+    finally:
+        # refused or failed: the candidate goes; the previous dist/ was never touched
+        if CANDIDATE.exists():
+            shutil.rmtree(CANDIDATE)
     print(f"render: dist/ written, {size // 1024} KB, {len(topic_pages)} topic pages, palette '{PALETTE.get('name', '?')}', sha256 {digest[:16]}…")
     if hidden:
         print(f"note: {len(hidden)} link(s) have no url yet and are hidden from visitors:")
